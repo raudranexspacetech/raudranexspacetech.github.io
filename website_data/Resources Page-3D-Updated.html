@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vizag AI Resources - 3D Node Interface</title>
+    <style>
+        :root {
+            --bg-color: #0a0f1a;
+            --primary-glow: #00aaff;
+            --secondary-glow: #aa00ff;
+            --card-bg: rgba(15, 23, 42, 0.85); /* Slightly more opaque */
+            --card-border: rgba(56, 189, 248, 0.3);
+            --card-hover-border: rgba(56, 189, 248, 0.8);
+            --text-color: #e2e8f0; /* slate-200 */
+            --text-color-muted: #94a3b8; /* slate-400 */
+            --heading-color: #f1f5f9; /* slate-100 */
+            --link-color: #38bdf8; /* sky-400 */
+            --link-hover-color: #7dd3fc; /* sky-300 */
+            --icon-color: var(--primary-glow);
+            --highlight-color: #38bdf8;
+            --base-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+            --hover-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            --focus-card-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+            --glow-shadow: 0 0 15px;
+            --focus-glow-shadow: 0 0 25px;
+
+            /* Content Display Specific */
+            --content-bg: rgba(10, 15, 26, 0.9); /* Darker, slightly transparent */
+            --content-border: rgba(56, 189, 248, 0.5);
+            --content-shadow: 0 0 40px rgba(0, 170, 255, 0.2);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at center, rgba(30, 41, 59, 0.5) 0%, var(--bg-color) 70%);
+            color: var(--text-color);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .scene-container {
+            width: 95%;
+            height: 95%;
+            max-width: 1200px;
+            max-height: 800px;
+            perspective: 1800px;
+            position: relative;
+        }
+
+        .world {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        /* --- Updated Node Card Size --- */
+        .node-card {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            /* --- Updated Size --- */
+            width: 250px; /* Increased from 220px */
+            height: 160px; /* Increased from 140px */
+            margin-left: -125px; /* Adjusted for new width (-250/2) */
+            margin-top: -80px;  /* Adjusted for new height (-160/2) */
+            /* --- End Updated Size --- */
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: var(--base-card-shadow), inset 0 0 10px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease-out, box-shadow 0.5s ease-out, border-color 0.5s ease-out, opacity 0.5s ease, filter 0.5s ease;
+            text-align: center;
+            will-change: transform, box-shadow, opacity, filter;
+            --current-transform: translate3d(0, 0, 0);
+            transform: var(--current-transform);
+        }
+        /* --- End Updated Node Card Size --- */
+
+        .card-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            will-change: transform;
+            padding: 10px;
+        }
+
+        .node-card::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 17px;
+            background: radial-gradient(ellipse at center, var(--primary-glow), transparent 80%);
+            filter: blur(15px);
+            opacity: 0;
+            transition: opacity 0.5s ease-out;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        body:not(.focused) .node-card:hover {
+            border-color: var(--card-hover-border);
+            box-shadow: var(--hover-card-shadow), inset 0 0 15px rgba(0, 0, 0, 0.4);
+            transform: var(--current-transform) translateZ(60px) scale(1.08);
+        }
+
+        body:not(.focused) .node-card:hover::before {
+            opacity: 0.3;
+        }
+
+        .node-icon {
+            font-size: 3rem; /* Larger icon */
+            margin-bottom: 12px;
+            color: var(--icon-color);
+            text-shadow: 0 0 12px var(--primary-glow);
+            transition: transform 0.4s ease-out;
+            pointer-events: none;
+        }
+
+        .node-title {
+            font-weight: 600;
+            font-size: 1.1rem; /* Slightly larger title */
+            pointer-events: none;
+            color: var(--heading-color);
+        }
+
+        .world.is-focused .node-card:not(.is-target) {
+            opacity: 0.15; /* Dim further */
+            pointer-events: none;
+            filter: grayscale(90%) blur(2px); /* More blur */
+        }
+
+        .world.is-focused .node-card.is-target {
+            border-color: var(--highlight-color);
+            box-shadow: var(--focus-card-shadow), 0 0 30px var(--primary-glow), 0 0 50px var(--secondary-glow);
+            pointer-events: auto;
+            opacity: 1;
+            filter: none;
+            transform: var(--current-transform) translateZ(30px);
+        }
+
+        .world.is-focused .node-card.is-target::before {
+            opacity: 0.6;
+        }
+
+        .background-grid {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: linear-gradient(rgba(56, 189, 248, 0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+            background-size: 60px 60px;
+            transform: translateZ(-500px) rotateX(80deg);
+            transform-style: preserve-3d;
+            opacity: 0.7;
+        }
+
+        /* Info Display - Simplified */
+        #info-display {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 450px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            pointer-events: none;
+            text-align: center;
+            z-index: 50;
+        }
+         /* Show info only on hover, hide when focused */
+         body:not(.focused) .node-card:hover+#info-display,
+         body:not(.focused) .node-card:hover~#info-display {
+             opacity: 1;
+             transform: translateX(-50%) translateY(-5px); /* Slight lift */
+         }
+
+
+        #back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(30, 41, 59, 0.7); /* Darker button */
+            border: 1px solid var(--card-border);
+            color: var(--text-color);
+            padding: 10px 18px; /* Larger button */
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0s 0.5s, transform 0.5s ease, background-color 0.3s ease, border-color 0.3s ease;
+            z-index: 150; /* Above content display */
+            transform: translateX(-20px);
+            backdrop-filter: blur(5px);
+        }
+
+        #back-button:hover {
+            background: rgba(56, 189, 248, 0.3); /* Glow color background */
+            border-color: var(--card-hover-border);
+        }
+
+        body.focused #back-button {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            transition-delay: 0.2s, 0.2s, 0.2s; /* Delay appearance slightly */
+        }
+
+        body.no-mouse-rotate {
+            cursor: default;
+        }
+
+        /* --- Content Display Overlay --- */
+        #content-display {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 90%;
+            max-width: 800px; /* Max width for content */
+            height: 75%;
+            max-height: 650px;
+            transform: translate(-50%, -50%) scale(0.9);
+            background-color: var(--content-bg);
+            border: 1px solid var(--content-border);
+            border-radius: 15px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: var(--content-shadow);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), visibility 0s 0.5s;
+            z-index: 100; /* Below back button, above nodes */
+            overflow: hidden; /* Hide scrollbar until needed */
+            display: flex; /* Use flexbox */
+            flex-direction: column; /* Stack title and content */
+        }
+
+        body.content-visible #content-display {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+            transition-delay: 0s;
+        }
+
+        .content-display-header {
+             padding: 20px 30px;
+             border-bottom: 1px solid var(--content-border);
+             flex-shrink: 0; /* Prevent header from shrinking */
+             background-color: rgba(15, 23, 42, 0.5); /* Slightly different header bg */
+        }
+        .content-display-header h2 {
+            margin: 0;
+            font-size: 1.8rem;
+            color: var(--heading-color);
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+
+        .content-display-body {
+            padding: 30px;
+            overflow-y: auto; /* Enable scrolling for content */
+            flex-grow: 1; /* Allow body to take remaining space */
+             /* Custom Scrollbar */
+             scrollbar-width: thin;
+             scrollbar-color: var(--primary-glow) rgba(30, 41, 59, 0.5);
+        }
+        /* Webkit Scrollbar */
+        .content-display-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        .content-display-body::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 4px;
+        }
+        .content-display-body::-webkit-scrollbar-thumb {
+            background-color: var(--primary-glow);
+            border-radius: 4px;
+            border: 2px solid transparent; /* Optional: Creates padding around thumb */
+            background-clip: content-box; /* Optional: Confines color inside border */
+        }
+
+        /* --- Styling for Sections/Cards inside Content Display --- */
+        #content-display .content-section {
+            margin-bottom: 30px;
+        }
+        #content-display .content-section-title {
+            font-size: 1.4rem;
+            color: var(--heading-color);
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 8px;
+        }
+
+        #content-display .card-container {
+             display: grid;
+             grid-template-columns: 1fr; /* Stack cards vertically */
+             gap: 20px;
+         }
+
+         #content-display .card {
+             background-color: rgba(30, 41, 59, 0.6);
+             border: 1px solid rgba(56, 189, 248, 0.2);
+             border-radius: 8px;
+             padding: 20px;
+             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+             color: var(--text-color);
+             display: flex;
+             flex-direction: column;
+             transform: none !important;
+         }
+         #content-display .card:hover {
+             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+             border-color: rgba(56, 189, 248, 0.5);
+             transform: translateY(-3px);
+         }
+
+         #content-display .card h3 {
+             color: var(--highlight-color);
+             margin-bottom: 10px;
+             font-size: 1.15rem;
+         }
+
+         #content-display .card p {
+             color: var(--text-color);
+             margin-bottom: 15px;
+             flex-grow: 1;
+             font-size: 0.95rem;
+             line-height: 1.5;
+         }
+
+         #content-display .card-meta {
+             font-size: 0.8rem;
+             color: var(--text-color-muted);
+             margin-bottom: 15px;
+             display: block;
+         }
+         #content-display .card-meta strong { /* Style source label */
+             color: var(--text-color);
+             font-weight: 600;
+         }
+
+         #content-display .card-links { /* Container for links */
+            margin-top: auto; /* Pushes to bottom */
+         }
+         #content-display .card-link {
+             display: inline-block; /* Allow multiple links */
+             background-color: var(--link-color);
+             color: var(--bg-color);
+             padding: 8px 15px;
+             border-radius: 5px;
+             text-decoration: none;
+             font-weight: bold;
+             font-size: 0.9rem;
+             transition: background-color 0.3s ease, transform 0.2s ease;
+             border: none;
+             cursor: pointer;
+             text-align: center;
+             transform: none;
+             margin-right: 10px; /* Space between links */
+             margin-bottom: 5px; /* Wrap nicely */
+         }
+         #content-display .card-link:last-child {
+             margin-right: 0;
+         }
+         #content-display .card-link:hover {
+             background-color: var(--link-hover-color);
+             transform: scale(1.05);
+         }
+          #content-display .card-link.disabled {
+            background-color: #475569;
+            color: var(--text-color-muted);
+            cursor: not-allowed;
+            pointer-events: none;
+            transform: none;
+         }
+
+        /* --- Styling for List inside Content Display --- */
+         #content-display .resource-list {
+            list-style: none;
+            padding: 0;
+            margin: 0; /* Reset margin */
+        }
+
+        #content-display .resource-list li {
+            background-color: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(56, 189, 248, 0.15);
+            margin-bottom: 12px;
+            border-radius: 6px;
+            transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        #content-display .resource-list li:hover {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.4);
+            transform: translateX(4px);
+        }
+
+        #content-display .resource-list li a {
+            display: block;
+            padding: 15px 20px;
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+            font-size: 1rem; /* Adjust if needed */
+            transition: color 0.3s ease, background-color 0.3s ease;
+            word-break: break-word; /* Prevent long text overflowing */
+        }
+         #content-display .resource-list li a:hover {
+             color: var(--text-color);
+             background-color: rgba(56, 189, 248, 0.2);
+         }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="scene-container" id="scene-container">
+        <div class="world" id="world">
+
+            <div class="background-grid"></div>
+
+            <!-- Updated Node Cards -->
+            <div class="node-card" id="vizag-companies" data-id="vizag-companies" data-info="List of AI-focused companies operating in Visakhapatnam.">
+                <div class="card-content">
+                    <div class="node-icon">📈</div> <!-- Chart Increasing Emoji -->
+                    <div class="node-title">VIZAG-AI Companies</div>
+                </div>
+            </div>
+            <div class="node-card" id="vizag-dev" data-id="vizag-dev" data-info="Latest AI developments and initiatives happening in Visakhapatnam.">
+                <div class="card-content">
+                    <div class="node-icon">🇮🇳</div> <!-- India Flag Emoji -->
+                    <div class="node-title">Vizag AI Developments</div>
+                </div>
+            </div>
+            <div class="node-card" id="global-dev" data-id="global-dev" data-info="Key breakthroughs, trends, and news from the international AI landscape.">
+                <div class="card-content">
+                    <div class="node-icon">🌍</div> <!-- Globe Emoji -->
+                    <div class="node-title">Global AI Developments</div>
+                </div>
+            </div>
+            <div class="node-card" id="resources" data-id="resources" data-info="Curated list of AI/ML learning platforms, tools, research papers, and communities.">
+                <div class="card-content">
+                    <div class="node-icon">📚</div> <!-- Books Emoji -->
+                    <div class="node-title">AI Learning Resources</div>
+                </div>
+            </div>
+
+        </div> <!-- End .world -->
+    </div> <!-- End .scene-container -->
+
+    <!-- Content Display Overlay -->
+    <div id="content-display">
+        <div class="content-display-header">
+             <h2 id="content-title">Section Title</h2>
+        </div>
+        <div class="content-display-body" id="content-body">
+            <!-- Content will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Templates for Content -->
+    <!-- ================================== -->
+    <!-- == VIZAG COMPANIES TEMPLATE     == -->
+    <!-- ================================== -->
+    <template id="template-vizag-companies">
+        <p style="color: var(--text-color-muted); font-size: 1rem; margin-bottom: 25px; text-align: center;">A selection of companies with a focus on Artificial Intelligence based in Visakhapatnam.</p>
+
+        <section class="content-section">
+            <h3 class="content-section-title">AI Companies in Vizag</h3>
+            <div class="card-container">
+                <article class="card">
+                    <h3>Dreambot</h3>
+                    <p>Dreambot Private Limited, founded in 2023 and headquartered in Visakhapatnam, India, is revolutionizing home cooking through the integration of artificial intelligence and robotics. The company offers AI-powered kitchen assistants designed to simplify meal preparation, featuring voice-controlled interfaces, precise cooking processes, and automated cleaning capabilities. These robotic companions adapt recipes to individual tastes and dietary preferences, making cooking both enjoyable and accessible. Dreambot also provides services such as personalized meal planning, 24/7 customer support, and remote control via a dedicated app, ensuring a seamless and efficient culinary experience for users.</p>
+                    <div class="card-links">
+                        <a href="https://www.dreambot.co.in/learnmore" class="card-link" target="_blank" rel="noopener noreferrer">Learn More</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>Alphanome.AI</h3>
+                    <p>Alphanome.AI is an AI Research Lab and Venture Studio dedicated to building AI-first ventures. Headquartered in Vizag, India, Alphanome.AI is committed to developing cutting-edge AI technologies and fostering a culture of innovation, ethical AI development, and societal impact. Its research focuses on Antetic AI and AntGI, inspired by the collective intelligence of ant colonies and the evolutionary roots of learning.</p>
+                    <div class="card-links">
+                         <a href="https://www.alphanome.ai/ventures" class="card-link" target="_blank" rel="noopener noreferrer">View Ventures</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>DATAI2I</h3>
+                    <p>DATAi2i is an AI research and development company headquartered in Visakhapatnam, India, specializing in Generative AI, AI Assistants, and intelligent industrial IoT solutions. The company focuses on building AI-driven automation tools, predictive analytics, and custom AI products tailored to industry needs. DATAi2i collaborates with businesses to develop AI-powered solutions that enhance decision-making, operational efficiency, and digital transformation. Their expertise spans across sectors, integrating AI into IoT infrastructure and enterprise systems for smarter workflows. They also offer AI and Data Science workshops, empowering professionals with cutting-edge skills. Committed to driving AI adoption, DATAi2i is at the forefront of AI innovation.</p>
+                    <div class="card-links">
+                        <a href="https://datai2i.com/#products" class="card-link" target="_blank" rel="noopener noreferrer">View Products</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>Praxsol Engineering</h3>
+                    <p>Praxsol Engineering Private Limited is an engineering services company headquartered in Visakhapatnam, India, specializing in mechanical design, plant engineering, and product development. The company offers comprehensive solutions, including material handling systems engineering, civil and structural design, and virtual construction simulation. Praxsol serves industries such as iron, steel, mining, power and energy, food processing, and agriculture, providing tailored engineering services to enhance operational efficiency. The company also engages in research and development, focusing on areas like artificial intelligence and decarbonization solutions. With a commitment to innovation and quality, Praxsol Engineering delivers customized, strategy-driven solutions to clients worldwide.</p>
+                    <div class="card-links">
+                        <a href="https://praxsol.in/services/" class="card-link" target="_blank" rel="noopener noreferrer">View Services</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </template>
+    <!-- ================================== -->
+    <!-- == END VIZAG COMPANIES TEMPLATE == -->
+    <!-- ================================== -->
+
+
+    <!-- ================================== -->
+    <!-- == VIZAG DEVELOPMENTS TEMPLATE  == -->
+    <!-- ================================== -->
+    <template id="template-vizag-dev">
+        <p style="color: var(--text-color-muted); font-size: 1rem; margin-bottom: 25px; text-align: center;">Summary of recent developments (derived from early 2025 report). (Last Updated: April 14th, 2025 - Illustrative)</p>
+
+        <!-- Government Initiatives & Policy -->
+        <section class="content-section">
+            <h3 class="content-section-title">Government Initiatives & Policy</h3>
+            <div class="card-container">
+                <article class="card">
+                    <h3>Data City Project Announced</h3>
+                    <p>Andhra Pradesh plans a 500-acre "Data City" near Visakhapatnam (Madhurawada) to host data centers and AI hubs, modeled after Hyderabad's Hitec City. Land acquisition is underway, with Google (80 acres) and TCS (30 acres) as initial occupants, part of a plan to create 2 million jobs.</p>
+                    <span class="card-meta"><strong>Source:</strong> SwarajyaMag / Business Standard | <strong>Date:</strong> Jan 27, 2025</span>
+                    <div class="card-links">
+                        <a href="https://swarajyamag.com/news-brief/visakhapatnam-to-follow-hyderabad-model-google-tcs-anchor-andhras-500-acre-data-city-to-build-tech-and-ai-powerhouse" class="card-link" target="_blank" rel="noopener noreferrer">SwarajyaMag</a>
+                        <a href="https://www.business-standard.com/india-news/andhra-pradesh-data-city-visakhapatnam-it-ai-jobs-hyderabad-hitec-city-125012700272_1.html" class="card-link" target="_blank" rel="noopener noreferrer">Business Standard</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>AP Govt Partners with Microsoft for AI Skills</h3>
+                    <p>The AP government, via APSSDC, signed an MoU with Microsoft to train 200,000 youth in AI and modern technologies over the next year (from March 2025). The goal is to enhance employability for the IT sector and international job markets.</p>
+                    <span class="card-meta"><strong>Source:</strong> The Hans India | <strong>Date:</strong> March 13, 2025</span>
+                    <div class="card-links">
+                         <a href="https://www.thehansindia.com/andhra-pradesh/andhra-pradesh-government-partners-with-microsoft-to-enhance-ai-skills-953553" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>AP IT & GCC Policy 4.0 (2024-29) Launched</h3>
+                    <p>Andhra Pradesh notified its new IT & GCC policy aimed at fostering a knowledge economy, supporting IT/GCC sectors, incentivizing employment, and leveraging remote/hybrid work models. The policy highlights AP's cost advantages and talent pool.</p>
+                    <span class="card-meta"><strong>Source:</strong> AP EDB (Govt. Portal) | <strong>Date:</strong> Dec 12, 2024</span>
+                     <div class="card-links">
+                        <a href="https://apedb.ap.gov.in/assets/pdf/AP%20IT%20&%20GCC%20Policy%20(4%200)%202024-2029_%20G%20O%20MS%20No.9,%20dt%2012%2012%202024%20(1).pdf" class="card-link" target="_blank" rel="noopener noreferrer">View Policy PDF</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Corporate Investments & Partnerships -->
+         <section class="content-section">
+            <h3 class="content-section-title">Corporate Investments & Partnerships</h3>
+            <div class="card-container">
+                <article class="card">
+                    <h3>Google Inks MoU for AI Data Centre in Vizag</h3>
+                    <p>Google signed an MoU with the AP government to establish an AI Data Centre in Visakhapatnam, seen as a major boost to the state's digital ecosystem. This followed an earlier agreement on broader AI initiatives.</p>
+                    <span class="card-meta"><strong>Source:</strong> The New Indian Express / The Economic Times | <strong>Date:</strong> Dec 11, 2024</span>
+                     <div class="card-links">
+                        <a href="https://www.newindianexpress.com/states/andhra-pradesh/2024/Dec/11/google-inks-mou-with-andhra-government-to-establish-ai-data-centre-in-vizag" class="card-link" target="_blank" rel="noopener noreferrer">New Indian Express</a>
+                        <a href="https://m.economictimes.com/tech/artificial-intelligence/google-andhra-pradesh-eyeing-big-ai-opportunity-in-vizag-cm-chandrababu-naidu/articleshow/116211680.cms" class="card-link" target="_blank" rel="noopener noreferrer">Economic Times</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>AP Partners with Google for AI Skill Development & Sustainability</h3>
+                    <p>The AP government signed an MoU with Google (Dec 5, 2024) for AI skill development targeting youth (10k+ via Google Essentials, cloud certs in GenAI etc.) and AI pilots in sustainability, healthcare, agriculture, and governance.</p>
+                    <span class="card-meta"><strong>Source:</strong> Times of India | <strong>Date:</strong> Dec 5, 2024</span>
+                     <div class="card-links">
+                         <a href="https://timesofindia.indiatimes.com/city/visakhapatnam/andhra-pradesh-partners-with-google-for-ai-skill-development-and-sustainability-initiatives/articleshow/116005412.cms" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+                 <article class="card">
+                    <h3>AP Woos Google Cloud for Chip Design Centre</h3>
+                    <p>During WEF Davos (Jan 2025), AP CM Chandrababu Naidu asked Google Cloud CEO Thomas Kurian to explore establishing a chip design center in Visakhapatnam and potentially a manufacturing unit for servers.</p>
+                    <span class="card-meta"><strong>Source:</strong> Deccan Herald | <strong>Date:</strong> Jan 22, 2025</span>
+                     <div class="card-links">
+                         <a href="https://www.deccanherald.com/india/andhra-pradesh/andhra-woos-google-cloud-to-setup-design-centre-in-vizag-to-develop-its-own-chips-used-in-servers-3368161" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+         <!-- Startup Ecosystem & Innovation -->
+         <section class="content-section">
+            <h3 class="content-section-title">Startup Ecosystem & Innovation</h3>
+            <div class="card-container">
+                <article class="card">
+                    <h3>Vizag's NASSCOM CoE Secures Startup Funding</h3>
+                    <p>The Centre of Excellence (CoE) for IoT & AI in Vizag, a MeitY-APIS-NASSCOM initiative, secured ₹131 crore in funding for eight AI/IoT startups (as of Aug 2024). These startups work with entities like Hindustan Shipyard and Vizag Port.</p>
+                    <span class="card-meta"><strong>Source:</strong> IndiaAI (Govt. Portal) | <strong>Date:</strong> Aug 7, 2024</span>
+                     <div class="card-links">
+                         <a href="https://indiaai.gov.in/news/vizag-s-iot-ai-center-of-excellence-secures-131-crore-for-startup-innovation" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+                 <article class="card">
+                    <h3>NASSCOM CoE Vizag Offers Startup Support</h3>
+                    <p>The CoE provides specialized support including the #FAME model (Funding, Incubation, Acceleration, Mentoring, Enterprise connect) and the #InnovateLab with hardware tools for AI/IoT startups.</p>
+                    <span class="card-meta"><strong>Source:</strong> NASSCOM CoE AP Website | <strong>Date:</strong> N/A</span>
+                     <div class="card-links">
+                         <a href="https://andhrapradesh.coe-iot.com/" class="card-link" target="_blank" rel="noopener noreferrer">Visit CoE Website</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>Indian Startups Embrace AI; Vizag a Tier II Hub</h3>
+                    <p>Reports highlight that over 77% of Indian startups invest in AI/ML/IoT, with 40% originating in Tier II/III cities like Visakhapatnam, which host 15% of the national tech skill pool.</p>
+                    <span class="card-meta"><strong>Source:</strong> ET Government / TheOutpost.ai | <strong>Date:</strong> July 2024 (approx.)</span>
+                    <div class="card-links">
+                         <a href="https://government.economictimes.indiatimes.com/news/technology/over-77-indian-startups-now-invest-in-ai-small-cities-brimming-with-tech-skill-pool/111833814" class="card-link" target="_blank" rel="noopener noreferrer">ET Government</a>
+                         <a href="https://theoutpost.ai/news-story/indian-startups-embrace-ai-77-investing-in-advanced-technologies-749/" class="card-link" target="_blank" rel="noopener noreferrer">TheOutpost.ai</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>AMTZ Partners for Medtech Startups in Vizag</h3>
+                    <p>The Andhra Pradesh MedTech Zone (AMTZ) partnered with FORGE Innovation & Ventures to establish a medtech startup ecosystem within Visakhapatnam's Medivalley Research Square.</p>
+                    <span class="card-meta"><strong>Source:</strong> Local Samosa | <strong>Date:</strong> Recent</span>
+                     <div class="card-links">
+                        <a href="https://www.localsamosa.com/news/startup-round-up-8950003" class="card-link" target="_blank" rel="noopener noreferrer">Read Roundup</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+         <!-- Academia & Skilling -->
+         <section class="content-section">
+            <h3 class="content-section-title">Academia & Skilling</h3>
+            <div class="card-container">
+                 <article class="card">
+                    <h3>GITAM Offers Specialized AI/Data Science Programs</h3>
+                    <p>GITAM University in Visakhapatnam provides B.Tech CSE programs with specializations in AI & ML, Data Science, Cyber Security, plus B.Tech Robotics & AI and PG programs (M.Sc./M.Tech) in Data Science. Curricula are designed with industry input.</p>
+                    <span class="card-meta"><strong>Source:</strong> GITAM University Website / Shiksha.com | <strong>Date:</strong> N/A</span>
+                     <div class="card-links">
+                        <a href="https://www.gitam.edu/visakhapatnam/artificial-intelligence-and-data-science" class="card-link" target="_blank" rel="noopener noreferrer">GITAM AI/DS</a>
+                        <a href="https://www.shiksha.com/college/gitam-school-of-technology-visakhapatnam-46353/course-b-tech-in-computer-science-and-engineering-artificial-intelligence-and-machine-learning-535221" class="card-link" target="_blank" rel="noopener noreferrer">Shiksha (B.Tech)</a>
+                    </div>
+                </article>
+                 <article class="card">
+                    <h3>HR Conclave Discusses AI Impact</h3>
+                    <p>An HR conclave at GITAM featured industry leaders discussing AI/ML's role in life sciences/pharma and transforming industries, while emphasizing that human intelligence remains irreplaceable.</p>
+                    <span class="card-meta"><strong>Source:</strong> The Hans India | <strong>Date:</strong> Recent</span>
+                    <div class="card-links">
+                        <a href="https://www.thehansindia.com/news/cities/visakhapatnam/human-intelligence-cannot-be-replaced-by-ai-experts-945492" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- AI Applications & Community -->
+         <section class="content-section">
+            <h3 class="content-section-title">AI Applications & Community</h3>
+            <div class="card-container">
+                 <article class="card">
+                    <h3>TTD Explores AI for Pilgrimage Management with Google</h3>
+                    <p>Tirumala Tirupati Devasthanams (TTD) is in talks with Google to integrate AI for managing pilgrimage, potentially optimizing crowds, queues, services, and security at the Tirumala shrine.</p>
+                    <span class="card-meta"><strong>Source:</strong> Deccan Chronicle | <strong>Date:</strong> Recent</span>
+                    <div class="card-links">
+                        <a href="https://www.deccanchronicle.com/southern-states/andhra-pradesh/ttd-mulls-ai-integration-with-google-inc-for-pilgrimage-management-1868849" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>AI Tools Used in Daily Life in Vizag</h3>
+                    <p>Individuals in Visakhapatnam are using AI tools for studies (resumes, presentations), daily tasks (virtual assistants), and professional work (custom legal research bots), reflecting growing adoption.</p>
+                    <span class="card-meta"><strong>Source:</strong> Deccan Chronicle | <strong>Date:</strong> Recent</span>
+                     <div class="card-links">
+                        <a href="https://www.deccanchronicle.com/southern-states/andhra-pradesh/ai-tools-revolutionizing-daily-life-for-ordinary-people-1864510" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+                <article class="card">
+                    <h3>DeepTech Summit Held in Vizag</h3>
+                    <p>The AI & Cloud Summit '24 (DeepTech Summit) took place in Visakhapatnam in Feb 2024, bringing together industry leaders, VCs, government, academia, and students to discuss AI, cloud, and deep tech innovation.</p>
+                    <span class="card-meta"><strong>Source:</strong> Times of India | <strong>Date:</strong> Feb 10, 2024</span>
+                     <div class="card-links">
+                        <a href="https://timesofindia.indiatimes.com/city/visakhapatnam/summit-discusses-advancements-in-ai-cloud-computing/articleshow/107588613.cms" class="card-link" target="_blank" rel="noopener noreferrer">Read Article</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Conferences & Events -->
+         <section class="content-section">
+            <h3 class="content-section-title">Conferences & Events</h3>
+            <div class="card-container">
+                 <article class="card">
+                    <h3>Upcoming AI Conferences in Vizag (2025)</h3>
+                    <p>Several international conferences focusing on AI, Big Data, Robotics, and related fields are scheduled in Visakhapatnam throughout April 2025.</p>
+                    <span class="card-meta"><strong>Source:</strong> Conference Alerts India | <strong>Date:</strong> N/A (Listing for 2025)</span>
+                    <div class="card-links">
+                         <a href="https://www.conferencealerts.in/vizag" class="card-link" target="_blank" rel="noopener noreferrer">View Listings</a>
+                    </div>
+                </article>
+                 <article class="card">
+                    <h3>IEEE ICISSGT 2025 Conference in Vizag</h3>
+                    <p>The IEEE Vizag Bay Section will host its flagship conference ICISSGT 2025 on Dec 19-20, 2025, with a theme focused on harnessing Generative AI for innovation in energy, education, and healthcare for SDGs.</p>
+                    <span class="card-meta"><strong>Source:</strong> IEEE Vizag Bay Section Website | <strong>Date:</strong> N/A</span>
+                    <div class="card-links">
+                        <a href="https://r10.ieee.org/vizagbay/icissgt-2023-2/" class="card-link" target="_blank" rel="noopener noreferrer">Conference Website</a>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </template>
+    <!-- ================================== -->
+    <!-- == END VIZAG DEV TEMPLATE      == -->
+    <!-- ================================== -->
+
+    <!-- ================================== -->
+    <!-- == GLOBAL DEV TEMPLATE          == -->
+    <!-- ==      (UPDATED CONTENT)       == -->
+    <!-- ================================== -->
+    <template id="template-global-dev">
+        <p style="color: var(--text-color-muted); font-size: 1rem; margin-bottom: 25px; text-align: center;">Summary of recent global developments (derived from early 2025 reports). (Last Updated: April 14th, 2025 - Illustrative)</p>
+
+         <!-- AI Model Development & Performance -->
+         <section class="content-section">
+            <h3 class="content-section-title">AI Model Development & Performance</h3>
+            <ul class="resource-list">
+                <li><a href="https://ai.meta.com/blog/llama-4-multimodal-intelligence/" target="_blank" rel="noopener noreferrer">The Llama 4 herd: Natively multimodal AI innovation - Meta AI</a></li>
+                <li><a href="https://openai.com/index/sora/" target="_blank" rel="noopener noreferrer">Sora: Creating video from text - OpenAI</a></li>
+                <li><a href="https://618media.com/en/blog/soras-impact-on-content-creation/" target="_blank" rel="noopener noreferrer">Sora's Impact on Content Creation (2025) - 618Media</a></li>
+                <li><a href="https://arbisoft.com/blogs/open-ai-s-sora-the-future-of-video-creation-and-its-impact-on-the-creative-industry" target="_blank" rel="noopener noreferrer">Open AI's Sora: Future of Video Creation & Impact - Arbisoft</a></li>
+                <li><a href="https://www.itpro.com/technology/artificial-intelligence/what-is-a-mixture-of-experts-model" target="_blank" rel="noopener noreferrer">What is a mixture of experts model? - ITPro</a></li>
+                <li><a href="https://arxiv.org/abs/2412.14219" target="_blank" rel="noopener noreferrer">A Survey on Inference Optimization Techniques for Mixture of Experts Models - arXiv</a></li>
+                <li><a href="https://www.netguru.com/blog/ai-model-optimization" target="_blank" rel="noopener noreferrer">AI Model Optimization Techniques for Enhanced Performance in 2025 - Netguru</a></li>
+                <li><a href="https://blogs.nvidia.com/blog/ai-scaling-laws/" target="_blank" rel="noopener noreferrer">How Scaling Laws Drive Smarter, More Powerful AI - NVIDIA Blog</a></li>
+                 <li><a href="https://metr.org/blog/2025-03-19-measuring-ai-ability-to-complete-long-tasks/" target="_blank" rel="noopener noreferrer">Measuring AI Ability to Complete Long Tasks - METR</a></li>
+            </ul>
+        </section>
+
+        <!-- AI Regulation & Policy -->
+         <section class="content-section">
+            <h3 class="content-section-title">AI Regulation & Policy</h3>
+            <ul class="resource-list">
+                <li><a href="https://about.citiprogram.org/blog/an-overview-of-the-eu-ai-act-what-you-need-to-know/" target="_blank" rel="noopener noreferrer">An Overview of the EU AI Act - CITI Program</a></li>
+                <li><a href="https://www.ibm.com/think/topics/eu-ai-act" target="_blank" rel="noopener noreferrer">What is the Artificial Intelligence Act of the European Union (EU AI Act)? - IBM</a></li>
+                <li><a href="https://www.simmons-simmons.com/en/publications/clyimpowh000ouxgkw1oidakk/the-eu-ai-act-a-quick-guide" target="_blank" rel="noopener noreferrer">The EU AI Act: A Quick Guide - Simmons & Simmons</a></li>
+                <li><a href="https://www.modelop.com/ai-governance/ai-regulations-standards/eu-ai-act" target="_blank" rel="noopener noreferrer">EU AI Act: Summary & Compliance Requirements - ModelOp</a></li>
+                <li><a href="https://digital-strategy.ec.europa.eu/en/faqs/general-purpose-ai-models-ai-act-questions-answers" target="_blank" rel="noopener noreferrer">General-Purpose AI Models in the AI Act – Questions & Answers - EU Commission</a></li>
+                <li><a href="https://artificialintelligenceact.eu/article/53/" target="_blank" rel="noopener noreferrer">Article 53: Obligations for Providers of General-Purpose AI Models - EU AI Act Site</a></li>
+                 <li><a href="https://www.privacyworld.blog/2025/02/key-insights-on-president-trumps-new-ai-executive-order-and-policy-regulatory-implications/" target="_blank" rel="noopener noreferrer">Insights on President Trump's New AI Executive Order - Privacy World</a></li>
+                <li><a href="https://www.csis.org/analysis/understanding-us-allies-current-legal-authority-implement-ai-and-semiconductor-export" target="_blank" rel="noopener noreferrer">Understanding U.S. Allies' Legal Authority on AI/Semiconductor Export Controls - CSIS</a></li>
+                <li><a href="https://www.whitecase.com/insight-our-thinking/ai-watch-global-regulatory-tracker-united-states" target="_blank" rel="noopener noreferrer">AI Watch: Global regulatory tracker - United States | White & Case LLP</a></li>
+                <li><a href="https://www.weforum.org/stories/2025/01/ai-for-india-2030-blueprint-inclusive-growth-global-leadership/" target="_blank" rel="noopener noreferrer">Why AI for India 2030 is a blueprint for inclusive growth | World Economic Forum</a></li>
+                <li><a href="https://pib.gov.in/PressReleasePage.aspx?PRID=2108810" target="_blank" rel="noopener noreferrer">India's AI Revolution - PIB</a></li>
+                <li><a href="https://www.ey.com/en_in/insights/ai/generative-ai-india-2025-report/india-ai-policy-agenda" target="_blank" rel="noopener noreferrer">India's Strategic AI Policy: Balancing Innovation & Responsible Deployment - EY</a></li>
+                <li><a href="https://carnegieendowment.org/research/2025/02/the-missing-pieces-in-indias-ai-puzzle-talent-data-and-randd?lang=en" target="_blank" rel="noopener noreferrer">The Missing Pieces in India's AI Puzzle: Talent, Data, and R&D - Carnegie Endowment</a></li>
+                <li><a href="https://securiti.ai/ai-governance-in-india-meity-2025-report/" target="_blank" rel="noopener noreferrer">Navigating AI Governance in India: Insights from MeitY's 2025 Report - Securiti</a></li>
+                <li><a href="https://www.globenewswire.com/news-release/2025/02/28/3034668/28124/en/AI-Regulatory-Landscape-Strategic-Intelligence-Report-2025-Focus-on-Approaches-by-EU-the-US-China-India-the-UK-Japan-Brazil-Australia-Canada-the-United-Arab-Emirates-and-Saudi-Arab.html" target="_blank" rel="noopener noreferrer">AI Regulatory Landscape Strategic Intelligence Report 2025 - GlobeNewswire</a></li>
+                <li><a href="https://www.mindfoundry.ai/blog/ai-regulations-around-the-world" target="_blank" rel="noopener noreferrer">AI Regulations around the World - 2025 - Mind Foundry</a></li>
+                <li><a href="https://www.ipu.org/impact/democracy-and-strong-parliaments/artificial-intelligence/parliamentary-actions-ai-policy" target="_blank" rel="noopener noreferrer">Parliamentary actions on AI policy - Inter-Parliamentary Union</a></li>
+            </ul>
+        </section>
+
+        <!-- AI Investment & Industry Trends -->
+        <section class="content-section">
+            <h3 class="content-section-title">AI Investment & Industry Trends</h3>
+            <ul class="resource-list">
+                 <li><a href="https://aventis-advisors.com/ai-valuation-multiples/" target="_blank" rel="noopener noreferrer">AI Valuation Multiples 2024 - Aventis Advisors</a></li>
+                 <li><a href="https://hai.stanford.edu/news/ai-index-2025-state-of-ai-in-10-charts" target="_blank" rel="noopener noreferrer">AI Index 2025: State of AI in 10 Charts | Stanford HAI</a></li>
+                 <li><a href="https://www.bigdatawire.com/this-just-in/stanford-hais-2025-ai-index-reveals-record-growth-in-ai-capabilities-investment-and-regulation/" target="_blank" rel="noopener noreferrer">Stanford HAI's 2025 AI Index Reveals Record Growth - Datanami</a></li>
+                 <li><a href="https://www.digit.fyi/the-state-of-ai-in-2025/" target="_blank" rel="noopener noreferrer">The State of AI in 2025 | What You Need To Know - DIGIT</a></li>
+                 <li><a href="https://www.mintz.com/insights-center/viewpoints/2166/2025-03-10-state-funding-market-ai-companies-2024-2025-outlook" target="_blank" rel="noopener noreferrer">The State of the Funding Market for AI Companies: 2024 - 2025 Outlook - Mintz</a></li>
+                <li><a href="https://www.scalecapital.com/stories/generative-ai-landscape-q4-2024-ai-investments-reach-historic-high" target="_blank" rel="noopener noreferrer">Generative AI Landscape Q4 2024: AI Investments Reach Historic High - Scale Venture Partners</a></li>
+                <li><a href="https://microventures.com/the-largest-funding-rounds-of-2024" target="_blank" rel="noopener noreferrer">The Largest Funding Rounds of 2024 - MicroVentures</a></li>
+                <li><a href="https://ascendixtech.com/how-many-ai-companies-are-there/" target="_blank" rel="noopener noreferrer">How Many AI Companies Are There in the World? [2025] - Ascendix Tech</a></li>
+                <li><a href="https://www.crescendo.ai/news/latest-vc-investment-deals-in-ai-startups" target="_blank" rel="noopener noreferrer">The Latest VC Investment Deals in AI Startups - 2025 | News - Crescendo.ai</a></li>
+                <li><a href="https://www.ark-invest.com/articles/analyst-research/ai-agents-could-transform-enterprise-spending" target="_blank" rel="noopener noreferrer">AI Agents Could Transform Enterprise Spending - Ark Invest</a></li>
+                 <li><a href="https://www.bcg.com/publications/2025/closing-the-ai-impact-gap" target="_blank" rel="noopener noreferrer">From Potential to Profit: Closing the AI Impact Gap | BCG</a></li>
+                 <li><a href="https://cloud.google.com/transform/ai-impact-industries-2025" target="_blank" rel="noopener noreferrer">AI's impact on industries in 2025 | Google Cloud Blog</a></li>
+                 <li><a href="https://appinventiv.com/blog/ai-trends/" target="_blank" rel="noopener noreferrer">Top AI Trends 2025: Key Developments to Watch - Appinventiv</a></li>
+            </ul>
+        </section>
+
+         <!-- AI Applications -->
+        <section class="content-section">
+            <h3 class="content-section-title">AI Applications</h3>
+            <ul class="resource-list">
+                <li><a href="https://arxiv.org/html/2501.02725v1" target="_blank" rel="noopener noreferrer">Artificial Intelligence in Creative Industries: Advances Prior to 2025 - arXiv</a></li>
+                <li><a href="https://www.bcg.com/publications/2025/digital-ai-solutions-reshape-health-care-2025" target="_blank" rel="noopener noreferrer">How Digital & AI Will Reshape Health Care in 2025 | BCG</a></li>
+                <li><a href="https://eluminoustechnologies.com/blog/artificial-intelligence-statistics/" target="_blank" rel="noopener noreferrer">Artificial Intelligence Statistics 2025: Key Insights & Future Trends - eLuminous</a></li>
+                <li><a href="https://www.signitysolutions.com/blog/ai-in-healthcare-market-size-and-forecast" target="_blank" rel="noopener noreferrer">AI in Healthcare Market Size & Forecast: How Big Is The Industry 2025? - Signity Solutions</a></li>
+                <li><a href="https://www.healthcareitnews.com/news/health-systems-chase-roi-target-efficiency-ai-2025" target="_blank" rel="noopener noreferrer">Health systems chase ROI, target efficiency in AI for 2025 | Healthcare IT News</a></li>
+                 <li><a href="https://reports.weforum.org/docs/WEF_The_Future_of_AI_Enabled_Health_2025.pdf" target="_blank" rel="noopener noreferrer">The Future of AI-Enabled Health: Leading the Way - World Economic Forum Report</a></li>
+                <li><a href="https://www.bain.com/insights/ai-in-financial-services-survey-shows-productivity-gains-across-the-board/" target="_blank" rel="noopener noreferrer">AI in Financial Services Survey Shows Productivity Gains - Bain & Company</a></li>
+                 <li><a href="https://www.trigyn.com/insights/artificial-intelligence-ai-2025" target="_blank" rel="noopener noreferrer">Artificial Intelligence (AI) in 2025 - Trigyn Technologies</a></li>
+            </ul>
+        </section>
+
+        <!-- AI Ethics & Sustainability -->
+        <section class="content-section">
+            <h3 class="content-section-title">AI Ethics & Sustainability</h3>
+             <ul class="resource-list">
+                <li><a href="https://www.americancentury.com/insights/ai-risks-ethics-legal-concerns-cybersecurity-and-environment/" target="_blank" rel="noopener noreferrer">Artificial Intelligence: Ethical Concerns and Sustainability Issues - American Century</a></li>
+                <li><a href="https://www.un.org/sites/un2.un.org/files/governing_ai_for_humanity_final_report_en.pdf" target="_blank" rel="noopener noreferrer">Governing AI for Humanity: Final Report - United Nations</a></li>
+                <li><a href="https://www.aceee.org/white-paper/2025/04/future-proof-ai-data-centers-grid-reliability-and-affordable-energy" target="_blank" rel="noopener noreferrer">Future-Proof AI Data Centers, Grid Reliability, and Affordable Energy - ACEEE</a></li>
+                <li><a href="https://mitsloan.mit.edu/ideas-made-to-matter/ai-has-high-data-center-energy-costs-there-are-solutions" target="_blank" rel="noopener noreferrer">AI has high data center energy costs — but there are solutions | MIT Sloan</a></li>
+                <li><a href="https://www.slrconsulting.com/insights/sustainable-ai-mitigating-water-risks-in-the-data-centre-boom/" target="_blank" rel="noopener noreferrer">Sustainable AI: Mitigating water risks in the data centre boom - SLR Consulting</a></li>
+                <li><a href="https://www.electropages.com/blog/2025/02/not-enough-water-could-datacenters-threaten-world-water-supplies" target="_blank" rel="noopener noreferrer">Not Enough Water – AI Growth Sparks Water Crisis Fears - Electropages</a></li>
+                <li><a href="https://www.utilitydive.com/news/2025-outlook-data-center-cooling-electricity-demand-ai-dual-phase-direct-to-chip-energy-efficiency/738120/" target="_blank" rel="noopener noreferrer">The 2025 outlook for data center cooling - Utility Dive</a></li>
+                <li><a href="https://blog.google/technology/ai/responsible-ai-2024-report-ongoing-work/" target="_blank" rel="noopener noreferrer">Responsible AI: Our 2024 report and ongoing work - Google Blog</a></li>
+            </ul>
+        </section>
+
+         <!-- AI Research & Global Rankings -->
+        <section class="content-section">
+            <h3 class="content-section-title">AI Research & Global Rankings</h3>
+             <ul class="resource-list">
+                 <li><a href="https://hai.stanford.edu/ai-index/2025-ai-index-report" target="_blank" rel="noopener noreferrer">The 2025 AI Index Report | Stanford HAI</a></li>
+                 <li><a href="https://hai.stanford.edu/ai-index/2025-ai-index-report/technical-performance" target="_blank" rel="noopener noreferrer">Technical Performance | The 2025 AI Index Report | Stanford HAI</a></li>
+                 <li><a href="https://arxiv.org/pdf/2503.22931" target="_blank" rel="noopener noreferrer">arXiv:2503.22931v2 [cs.AI] (Example Research Paper)</a></li>
+                 <li><a href="https://indatalabs.com/blog/technology-trends-overview" target="_blank" rel="noopener noreferrer">Technology trends 2025: AI and Big data analytics - InData Labs</a></li>
+                 <li><a href="https://www.analyticsvidhya.com/blog/2024/02/top-countries-leading-in-ai-research-technology/" target="_blank" rel="noopener noreferrer">Top 10 Countries Leading in AI Research & Technology in 2025 - Analytics Vidhya</a></li>
+                <li><a href="https://hai.stanford.edu/news/global-ai-power-rankings-stanford-hai-tool-ranks-36-countries-ai" target="_blank" rel="noopener noreferrer">Global AI Power Rankings: Stanford HAI Tool Ranks 36 Countries - Stanford HAI</a></li>
+                 <li><a href="https://www.crescendo.ai/news/latest-ai-news-and-updates" target="_blank" rel="noopener noreferrer">Latest AI Breakthroughs and News: March 2025 | News - Crescendo.ai</a></li>
+                <li><a href="https://www.growexx.com/blog/ai-2025-an-outlook-ahead-after-2024s-breakthrough/" target="_blank" rel="noopener noreferrer">AI 2025: An Outlook Ahead after 2024's Breakthrough - GrowExx</a></li>
+            </ul>
+        </section>
+
+    </template>
+    <!-- ================================== -->
+    <!-- == END GLOBAL DEV TEMPLATE     == -->
+    <!-- ================================== -->
+
+
+    <!-- ================================== -->
+    <!-- == AI LEARNING RESOURCES TEMPLATE == -->
+    <!-- ==  (PREVIOUSLY ADDED CONTENT)  == -->
+    <!-- ================================== -->
+    <template id="template-resources">
+        <p style="color: var(--text-color-muted); font-size: 1rem; margin-bottom: 25px; text-align: center;">A collection of links to online courses, university rankings, training institutes, and community discussions related to AI/ML learning.</p>
+        <ul class="resource-list">
+            <li><a href="https://www.aigantic.com/ai-jobs/ai-jobs-education/online-ai-education/" target="_blank" rel="noopener noreferrer">Online AI Education Platforms: Top Choices - AIgantic</a></li>
+            <li><a href="https://www.davidayo.com/blog/the-best-online-resources-for-learning-artificial-intelligence-and-machine-learning/" target="_blank" rel="noopener noreferrer">Best Online Resources for Learning AI/ML - David Ayo Blog</a></li>
+            <li><a href="https://www.learnrobotics.org/blog/best-machine-learning-courses-online/" target="_blank" rel="noopener noreferrer">12 Best Machine Learning Courses Online - Learn Robotics</a></li>
+            <li><a href="https://www.marketingaiinstitute.com/blog/17-artificial-intelligence-courses-to-take-online" target="_blank" rel="noopener noreferrer">Top AI Courses to Take Online - Marketing AI Institute</a></li>
+            <li><a href="https://www.careerflow.ai/blog/best-free-ai-courses" target="_blank" rel="noopener noreferrer">Free AI Courses (Coursera, edX, Microsoft, etc.) - Careerflow.ai</a></li>
+            <li><a href="https://www.learndatasci.com/best-artificial-intelligence-ai-courses/" target="_blank" rel="noopener noreferrer">The 9 Best AI Courses Online for 2025 - LearnDataSci</a></li>
+            <li><a href="https://www.timeshighereducation.com/world-university-rankings/2025/subject-ranking/computer-science" target="_blank" rel="noopener noreferrer">World University Rankings 2025: Computer Science - THE</a></li>
+            <li><a href="https://www.mastersportal.com/articles/2763/best-computer-science-universities.html" target="_blank" rel="noopener noreferrer">Best Computer Science Schools (World 2025) - Mastersportal</a></li>
+            <li><a href="https://www.qschina.cn/en/university-rankings/university-subject-rankings/2023/computer-science-information-systems" target="_blank" rel="noopener noreferrer">QS World University Rankings: CS & Info Systems 2023</a></li>
+            <li><a href="https://www.topuniversities.com/university-subject-rankings/data-science-artificial-intelligence" target="_blank" rel="noopener noreferrer">QS World University Rankings: Data Science & AI 2025</a></li>
+            <li><a href="https://www.topuniversities.com/university-subject-rankings/computer-science-information-systems/2022" target="_blank" rel="noopener noreferrer">QS World University Rankings for Computer Science and Information Systems 2022</a></li>
+            <li><a href="https://www.topuniversities.com/university-subject-rankings/computer-science-information-systems" target="_blank" rel="noopener noreferrer">QS World University Rankings: CS & Info Systems 2025</a></li>
+            <li><a href="https://csrankings.org/" target="_blank" rel="noopener noreferrer">CSRankings: Computer Science Rankings</a></li>
+            <li><a href="https://csrankings.org/index?ai&vision&mlmining&nlp&ir&us" target="_blank" rel="noopener noreferrer">Computer Science Rankings (Specific Fields) - CSRankings</a></li>
+            <li><a href="https://edurank.org/cs/ai/" target="_blank" rel="noopener noreferrer">World's best Artificial Intelligence (AI) universities - EduRank</a></li>
+            <li><a href="https://www.shiksha.com/engineering/colleges/ai-ml-colleges-india" target="_blank" rel="noopener noreferrer">Best AI & ML Colleges in India (Ranking 2025) - Shiksha</a></li>
+            <li><a href="https://www.iul.ac.in/blogs/list-of-best-btech-in-artificial-intelligence-colleges.html" target="_blank" rel="noopener noreferrer">List of Best B. Tech in AI Colleges - Integral University Blog</a></li>
+            <li><a href="https://www.gngroup.org/blogdetail/Top-10-Best-Colleges-for-BTech-in-Artificial-Intelligence-with-Fees-Structure" target="_blank" rel="noopener noreferrer">Top 10 Best Colleges for B.Tech in AI - GN Group Blog</a></li>
+            <li><a href="https://www.kccitm.edu.in/blog/list-of-best-colleges-for-b-tech-in-artificial-intelligence/23" target="_blank" rel="noopener noreferrer">List of Best B Tech AI Colleges 2025 - KCC Institute Blog</a></li>
+            <li><a href="https://www.sarvgyan.com/courses/best-artificial-intelligence-colleges-in-india" target="_blank" rel="noopener noreferrer">Best Artificial Intelligence Colleges In India 2025 - SarvGyan</a></li>
+            <li><a href="https://edurank.org/cs/ai/in/" target="_blank" rel="noopener noreferrer">India's best Artificial Intelligence (AI) universities - EduRank</a></li>
+            <li><a href="https://collegevidya.com/blog/artificail-intelligence-machine-learning-colleges-india/" target="_blank" rel="noopener noreferrer">Top 10 Artificial Intelligence and ML Colleges In India - College Vidya</a></li>
+            <li><a href="https://www.admissionindia.net/blog/discover-the-top-10-colleges-in-india-for-artificial-intelligence-and-machine-learning-excellence/" target="_blank" rel="noopener noreferrer">Discover the Top 10 Colleges in India for AI/ML - AdmissionIndia</a></li>
+            <li><a href="https://www.justdial.com/Visakhapatnam/Machine-Learning-Training-Institutes/nct-11985768" target="_blank" rel="noopener noreferrer">Popular Machine Learning Training Institutes in Vizag - Justdial</a></li>
+            <li><a href="https://www.justdial.com/Visakhapatnam/Artificial-Intelligence-Training-Centres/nct-11944734" target="_blank" rel="noopener noreferrer">Top AI Training Centres in Vizag - Justdial</a></li>
+            <li><a href="https://datapro.in/exploreview/artificial-intelligence-course-in-vizag" target="_blank" rel="noopener noreferrer">Best AI Certificate Training Course in Vizag - Datapro</a></li>
+            <li><a href="https://millenniumsoftsol.com/artificial-intelligence/" target="_blank" rel="noopener noreferrer">AI Certification Training Course in Vizag - Millennium Software</a></li>
+            <li><a href="https://teksacademy.com/courses/best-ai-and-ml-course-training-institute" target="_blank" rel="noopener noreferrer">AI and Machine Learning Course Training Institute - Teks Academy</a></li>
+            <li><a href="https://softenant.com/machine-learning-training-in-vizag/" target="_blank" rel="noopener noreferrer">Machine Learning Training in Vizag - Softenant Technologies</a></li>
+            <li><a href="https://datamites.com/machine-learning-course-training-vizag/" target="_blank" rel="noopener noreferrer">Machine Learning (ML) Course in Vizag (Fee Off) - DataMites</a></li>
+            <li><a href="https://datamites.com/artificial-intelligence-course-training-vizag/" target="_blank" rel="noopener noreferrer">AI Certification Training Course in Vizag - DataMites</a></li>
+            <li><a href="https://360digitmg.com/india/vizag/artificial-intelligence-ai-and-deep-learning-certification-course-training-institute" target="_blank" rel="noopener noreferrer">AI Course Training in Vizag - 360DigiTMG</a></li>
+            <li><a href="https://www.igmguru.com/machine-learning-ai/machine-learning-training-course-in-vizag" target="_blank" rel="noopener noreferrer">Best Machine Learning Training Institute in Vizag - igmGuru</a></li>
+            <li><a href="https://www.reddit.com/r/learnmachinelearning/comments/1czsras/what_are_the_best_free_online_ml_courses/" target="_blank" rel="noopener noreferrer">Discussion: Best free online ML courses? - Reddit r/learnmachinelearning</a></li>
+            <li><a href="https://www.reddit.com/r/learnmachinelearning/comments/1d0bksx/i_scraped_and_ranked_ai_courses_here_are_the_best/" target="_blank" rel="noopener noreferrer">Discussion: Scraped & Ranked AI Courses - Reddit r/learnmachinelearning</a></li>
+            <li><a href="https://drafty.cs.brown.edu/csopenrankings/" target="_blank" rel="noopener noreferrer">Computer Science Open Rankings - Brown University Drafty</a></li>
+            <li><a href="https://engineering.careers360.com/colleges/list-of-data-science-with-artificial-intelligence-colleges-in-india?page=12" target="_blank" rel="noopener noreferrer">Top Data Science with AI Colleges in India - Careers360</a></li>
+        </ul>
+    </template>
+    <!-- ================================== -->
+    <!-- == END AI LEARNING RESOURCES   == -->
+    <!-- ================================== -->
+
+
+    <div id="info-display">Click a node for details.</div> <!-- Updated info text -->
+    <button id="back-button">← Back</button> <!-- Simplified back text -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sceneContainer = document.getElementById('scene-container');
+            const world = document.getElementById('world');
+            const cards = Array.from(document.querySelectorAll('.node-card'));
+            const cardContents = Array.from(document.querySelectorAll('.card-content'));
+            const infoDisplay = document.getElementById('info-display');
+            const backButton = document.getElementById('back-button');
+            const body = document.body;
+
+            // Content Display Elements
+            const contentDisplay = document.getElementById('content-display');
+            const contentTitle = document.getElementById('content-title');
+            const contentBody = document.getElementById('content-body');
+
+            // --- Configuration ---
+            const MOUSE_ROTATION_SENSITIVITY = 0.08;
+            const INITIAL_WORLD_ROTATION = { x: -5, y: 0 }; // Adjusted slightly for new layout
+            const FOCUS_TRANSITION_DURATION = 1000; // In milliseconds
+            const MOUSE_MOVE_LERP_FACTOR = 0.08; // Smoother lerp
+
+            const cardConfigs = {};
+
+            // State variables
+            let currentWorldRotation = { ...INITIAL_WORLD_ROTATION };
+            let targetWorldRotation = { ...INITIAL_WORLD_ROTATION };
+            let isFocused = false;
+            let focusedCardId = null;
+            let mouseRotationActive = true;
+            let animationFrameId = null;
+            let worldTransitioning = false; // Flag to prevent actions during transition
+
+            // --- Positioning Logic ---
+             function calculatePositions() {
+                 const radiusX = Math.min(sceneContainer.offsetWidth * 0.3, 320); // Horizontal spread
+                 const radiusY = Math.min(sceneContainer.offsetHeight * 0.25, 130); // Vertical separation
+                 const radiusZ = 80; // Depth variation
+
+                 // Define positions for the 4 nodes in a diamond-like layout
+                 const positions = {
+                     'vizag-companies': { x: 0, y: -radiusY, z: -radiusZ / 2, angleY: 0, angleX: 15 }, // Top, slightly tilted down
+                     'vizag-dev':       { x: -radiusX, y: radiusY * 0.5, z: radiusZ / 2, angleY: 30, angleX: 0 }, // Bottom-Left, angled in
+                     'global-dev':      { x: 0, y: radiusY * 0.6, z: radiusZ, angleY: 0, angleX: 0 }, // Bottom-Center, further back
+                     'resources':       { x: radiusX, y: radiusY * 0.5, z: radiusZ / 2, angleY: -30, angleX: 0 } // Bottom-Right, angled in
+                 };
+
+                 cards.forEach((card) => {
+                     const id = card.dataset.id;
+                     const pos = positions[id];
+                     if (!pos) {
+                         console.warn("No position defined for card ID:", id);
+                         return; // Skip if position not found for some reason
+                     }
+
+                     // Base transform including position and initial rotation
+                     const baseTransform = `translate3d(${pos.x.toFixed(1)}px, ${pos.y.toFixed(1)}px, ${pos.z.toFixed(1)}px) rotateY(${pos.angleY.toFixed(1)}deg) rotateX(${pos.angleX.toFixed(1)}deg)`;
+
+                     // Target world rotation when focused: counter-rotate the world to bring the card forward
+                     const targetWorldY = -pos.angleY;
+                     const targetWorldX = -pos.angleX + 5; // Counter angleX + slight constant downward view tilt
+                     const targetWorldTransform = `rotateX(${targetWorldX.toFixed(1)}deg) rotateY(${targetWorldY.toFixed(1)}deg)`;
+
+                     card.style.setProperty('--current-transform', baseTransform);
+                     card.dataset.baseTransform = baseTransform;
+                     cardConfigs[id] = {
+                         baseTransform: baseTransform,
+                         targetWorldTransform: targetWorldTransform,
+                         title: card.querySelector('.node-title').textContent // Store title for overlay
+                     };
+                 });
+             }
+
+            // --- Event Handlers ---
+            function handleMouseMove(e) {
+                 if (!mouseRotationActive || worldTransitioning) return; // Check transition flag
+                 // Only apply subtle rotation when not focused
+                 if (isFocused) return;
+
+                 const rect = sceneContainer.getBoundingClientRect();
+                 const mouseX = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+                 const mouseY = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+
+                 // Apply sensitivity relative to initial rotation (or base 0,0 if preferred)
+                 const SENS_FACTOR = 5; // Control how much mouse moves view
+                 targetWorldRotation.y = INITIAL_WORLD_ROTATION.y + mouseX * SENS_FACTOR;
+                 targetWorldRotation.x = INITIAL_WORLD_ROTATION.x - mouseY * SENS_FACTOR * 0.5; // Less vertical sens
+
+                 if (!animationFrameId) startRotationAnimation();
+             }
+
+            function handleMouseLeave() {
+                if (isFocused || !mouseRotationActive || worldTransitioning) return; // Check transition flag
+                targetWorldRotation = { ...INITIAL_WORLD_ROTATION };
+                if (!animationFrameId) startRotationAnimation();
+            }
+
+            function getRotationFromTransform(transformString) {
+                 const rotXMatch = transformString.match(/rotateX\(([-\d.]+)deg\)/);
+                 const rotYMatch = transformString.match(/rotateY\(([-\d.]+)deg\)/);
+                 return {
+                     x: rotXMatch ? parseFloat(rotXMatch[1]) : 0,
+                     y: rotYMatch ? parseFloat(rotYMatch[1]) : 0
+                 };
+             }
+
+
+            function handleCardHover(e) { /* Keep for potential future use */ }
+            function handleCardOut() { /* Keep for potential future use */ }
+
+            function handleCardClick(e) {
+                // Prevent clicking during transitions or if already focused
+                if (isFocused || worldTransitioning) return;
+                const card = e.currentTarget;
+                focusedCardId = card.dataset.id;
+                const config = cardConfigs[focusedCardId];
+                if (!config || !config.targetWorldTransform) return;
+
+                isFocused = true;
+                worldTransitioning = true; // Start transition block
+                mouseRotationActive = false; // Disable mouse rotation during focus transition
+                body.classList.add('focused', 'no-mouse-rotate', 'content-visible'); // Add content-visible class
+                world.classList.add('is-focused');
+                card.classList.add('is-target');
+
+                // Animate world rotation
+                world.style.transition = `transform ${FOCUS_TRANSITION_DURATION / 1000}s cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
+                world.style.transform = config.targetWorldTransform;
+                targetWorldRotation = getRotationFromTransform(config.targetWorldTransform);
+                currentWorldRotation = { ...targetWorldRotation }; // Snap current rotation
+
+                 // --- Load Content ---
+                 const templateId = `template-${focusedCardId}`;
+                 const template = document.getElementById(templateId);
+                 if (template) {
+                     contentTitle.textContent = config.title; // Use stored title
+                     contentBody.innerHTML = ''; // Clear previous content
+                     contentBody.appendChild(template.content.cloneNode(true));
+                 } else {
+                     contentTitle.textContent = "Error";
+                     contentBody.innerHTML = '<p style="color: red;">Content template not found.</p>';
+                 }
+                 // Scroll content display to top immediately after loading new content
+                 contentBody.scrollTop = 0;
+
+
+                // Use transitionend to reliably know when focus animation finishes
+                world.addEventListener('transitionend', function onFocusEnd(event) {
+                    // Ensure the event fired on the 'world' element itself, not a child bubbling up
+                    // And that the property finishing is 'transform'
+                    if (event.target === world && event.propertyName === 'transform') {
+                        world.removeEventListener('transitionend', onFocusEnd); // Clean up listener
+                        worldTransitioning = false; // End transition block
+                        world.style.transition = ''; // Allow animation loop to take over smoothly
+                        // Keep mouseRotationActive = false while content is visible
+                        if (!animationFrameId) startRotationAnimation(); // Ensure loop runs for content orientation
+                    }
+                }, { once: false }); // Use once: false initially, remove listener manually
+            }
+
+            function handleBackClick() {
+                 // Prevent clicking during transitions or if not focused
+                 if (!isFocused || worldTransitioning) return;
+                 isFocused = false;
+                 worldTransitioning = true; // Start transition block
+                 mouseRotationActive = false; // Keep disabled during transition out
+                 body.classList.remove('focused', 'content-visible'); // Remove content-visible class
+
+                 world.classList.remove('is-focused');
+                 cards.forEach(c => c.classList.remove('is-target'));
+                 focusedCardId = null;
+
+                 // Hide Content Display using CSS transition handled by body class removal
+
+                 // Animate world back to initial state
+                 world.style.transition = `transform ${FOCUS_TRANSITION_DURATION / 1000}s cubic-bezier(0.68, -0.55, 0.27, 1.55)`;
+                 world.style.transform = `rotateX(${INITIAL_WORLD_ROTATION.x}deg) rotateY(${INITIAL_WORLD_ROTATION.y}deg)`;
+                 targetWorldRotation = { ...INITIAL_WORLD_ROTATION };
+                 currentWorldRotation = { ...targetWorldRotation }; // Snap rotation
+
+                 // Use transitionend to reliably know when back animation finishes
+                 world.addEventListener('transitionend', function onBackEnd(event) {
+                    // Ensure the event fired on the 'world' element itself and property is 'transform'
+                    if (event.target === world && event.propertyName === 'transform') {
+                        world.removeEventListener('transitionend', onBackEnd); // Clean up listener
+                        worldTransitioning = false; // End transition block
+                        mouseRotationActive = true;   // Re-enable mouse rotation
+                        body.classList.remove('no-mouse-rotate'); // Allow normal cursor
+                        world.style.transition = ''; // Allow animation loop to take over
+                        if (!animationFrameId) startRotationAnimation(); // Ensure loop runs
+                    }
+                 }, { once: false }); // Use once: false initially, remove listener manually
+            }
+
+            // --- Animation Loop ---
+            function updateRotation() {
+                 // Only lerp if not focused AND not transitioning
+                if (!isFocused && !worldTransitioning) {
+                    currentWorldRotation.x += (targetWorldRotation.x - currentWorldRotation.x) * MOUSE_MOVE_LERP_FACTOR;
+                    currentWorldRotation.y += (targetWorldRotation.y - currentWorldRotation.y) * MOUSE_MOVE_LERP_FACTOR;
+                    world.style.transform = `rotateX(${currentWorldRotation.x.toFixed(2)}deg) rotateY(${currentWorldRotation.y.toFixed(2)}deg)`;
+                } else if (isFocused && !worldTransitioning) {
+                    // If focused and stable, still apply current rotation (might be static)
+                     world.style.transform = `rotateX(${currentWorldRotation.x.toFixed(2)}deg) rotateY(${currentWorldRotation.y.toFixed(2)}deg)`;
+                }
+                // Else (during transition), let the CSS handle the transform
+
+                // Apply inverse rotation to card contents *always* to keep them facing user
+                // Unless transitioning back - could optionally freeze content during back transition
+                if (!worldTransitioning || isFocused) { // Keep content oriented while focusing or focused
+                    const inverseRotateX = -currentWorldRotation.x;
+                    const inverseRotateY = -currentWorldRotation.y;
+                    const contentTransform = `rotateY(${inverseRotateY.toFixed(2)}deg) rotateX(${inverseRotateX.toFixed(2)}deg)`; // Apply Y rotation first
+
+                    cardContents.forEach(content => {
+                        content.style.transform = contentTransform;
+                    });
+                }
+
+                 // Determine if the loop should continue
+                 let needsLoop = false;
+                 if (!isFocused && !worldTransitioning) {
+                     // Continue if lerping in overview mode
+                     needsLoop = Math.abs(targetWorldRotation.x - currentWorldRotation.x) > 0.01 ||
+                                 Math.abs(targetWorldRotation.y - currentWorldRotation.y) > 0.01;
+                 } else if (isFocused && !worldTransitioning) {
+                     // Continue if focused to keep content oriented (even if world rotation is static)
+                     needsLoop = true;
+                 }
+                  // No loop needed during CSS transitions (worldTransitioning = true)
+
+                if (needsLoop) {
+                    animationFrameId = requestAnimationFrame(updateRotation);
+                } else {
+                    animationFrameId = null; // Stop the loop
+                }
+            }
+
+
+             function startRotationAnimation() {
+                 // Only start if not already running and not transitioning
+                 if (!animationFrameId && !worldTransitioning) {
+                     animationFrameId = requestAnimationFrame(updateRotation);
+                 }
+             }
+
+            // --- Initialization ---
+            function init3DSpace() {
+                calculatePositions();
+                world.style.transition = 'none'; // No transition on initial load
+                world.style.transform = `rotateX(${INITIAL_WORLD_ROTATION.x}deg) rotateY(${INITIAL_WORLD_ROTATION.y}deg)`;
+                world.offsetHeight; // Trigger reflow
+                world.style.transition = ''; // Re-enable transitions
+
+                sceneContainer.addEventListener('mousemove', handleMouseMove);
+                sceneContainer.addEventListener('mouseleave', handleMouseLeave);
+                backButton.addEventListener('click', handleBackClick);
+                cards.forEach(card => {
+                    card.addEventListener('mouseover', handleCardHover); // Can keep for potential future effects
+                    card.addEventListener('mouseout', handleCardOut);   // Can keep for potential future effects
+                    card.addEventListener('click', handleCardClick);
+                });
+
+                startRotationAnimation(); // Start the animation loop
+            }
+
+            init3DSpace();
+        });
+    </script>
+
+</body>
+</html>

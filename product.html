@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Products | Raudranex Aerospace</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- 3D Library -->
+    <script src="assets/js/libraries/three.min.js"></script>
+
+    <!-- Page-specific script -->
+    <script src="assets/js/product-scene.js" defer></script>
+</head>
+<body class="product-page-body">
+
+    <header class="main-header">
+        <div class="logo">
+            <a href="index.html"><img src="website_data/logo.jpg" alt="Raudranex Aerospace Logo"></a>
+        </div>
+        <nav class="main-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="product.html">Product</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="updates.html">Updates</a></li>
+                <li><a href="career.html">Career</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Container for our 3D scene -->
+    <div id="product-scene-container"></div>
+
+    <!-- Hidden Modal for Product Details -->
+    <div id="product-modal" class="modal-hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn">&times;</button>
+            <div class="modal-body">
+                <!-- Content will be injected here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,250 @@
+/* A simple and common CSS Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    line-height: 1.5;
+}
+
+ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* --- FONT & COLOR DEFINITIONS (REVISED 2.0) --- */
+:root {
+    /* New Black-Based Palette */
+    --color-background: #050505;      /* Near-black for depth */
+    --color-primary-container: #1B1A55; /* Retaining for cards, but we can change */
+    --color-text-primary: #FFFFFF;      /* Pure white for high-contrast text */
+    --color-text-secondary: #9290C3;  /* Lighter lavender-grey for subtitles */
+    --color-accent-blue: #00d9ff;      /* A vibrant cyan for highlights */
+    --color-button-bg: #333333;       /* A solid dark grey for buttons */
+    --color-button-hover-bg: #555555; /* A lighter grey for hover */
+    --color-grid: rgba(255, 255, 255, 0.07); /* Faint white/grey for background grid */
+}
+
+/* --- GENERAL STYLING --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: transparent; /* <--- STARFIELD FIX: Allow canvas to show through */
+    color: var(--color-text-primary);
+    overflow-x: hidden;
+}
+
+/* --- LAYERING & WRAPPER (FINAL FIX) --- */
+.page-wrapper {
+    position: relative;
+    z-index: 2;
+}
+
+#starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* --- HEADER & NAVIGATION STYLING --- */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 4rem;
+    position: absolute; /* Sits on top of the hero section */
+    width: 100%;
+}
+
+.logo img {
+    height: 40px; /* Adjust size as needed */
+}
+
+.main-nav ul {
+    display: flex;
+    gap: 2.5rem; /* Space between nav items */
+}
+
+.main-nav a {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+}
+
+.main-nav a:hover {
+    color: var(--color-accent-blue); /* Highlight on hover */
+}
+
+/* --- HERO SECTION STYLING --- */
+#hero {
+    min-height: 100vh; /* Takes full height of the screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 2rem;
+}
+
+#hero h1 {
+    font-size: 5rem; /* Large, impactful text */
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: 2px;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    max-width: 600px;
+}
+
+/* --- HOMEPAGE STYLING --- */
+
+/* Call-to-Action Button (Revised 2.0) */
+.cta-button {
+    display: inline-block;
+    background-color: var(--color-button-bg);
+    color: var(--color-text-primary);
+    padding: 1rem 2.5rem;
+    border: 1px solid var(--color-button-hover-bg);
+    border-radius: 5px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: var(--color-button-hover-bg);
+    border-color: var(--color-text-secondary);
+    transform: translateY(-3px);
+}
+
+/* Partners Section */
+#partners {
+    padding: 10rem 2rem 10rem; /* Add more padding for scroll room */
+    text-align: center;
+}
+
+#partners p {
+    color: var(--color-text-secondary);
+    letter-spacing: 2px;
+    font-size: 0.8rem;
+    margin-bottom: 2rem;
+    font-weight: 500;
+}
+
+.partner-logos {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4rem;
+    filter: grayscale(100%) brightness(50%); /* Muted, professional look */
+}
+
+/* --- PRODUCT PAGE 3D SCENE & MODAL --- */
+.product-page-body {
+    background-color: #050505; /* Solid black background */
+    overflow: hidden; /* Prevent scrollbars from 3D scene */
+}
+
+#product-scene-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+/* Modal Styling */
+#product-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+#product-modal:not(.modal-hidden) {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-content {
+    background-color: #101010;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 2rem 3rem;
+    width: 90%;
+    max-width: 600px;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.4s ease;
+}
+
+#product-modal:not(.modal-hidden) .modal-content {
+    transform: scale(1);
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.modal-body h2 {
+    font-size: 2.5rem;
+    color: var(--color-accent-blue);
+    margin-bottom: 0.5rem;
+}
+
+.modal-body h3 {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 2rem;
+}
+
+.modal-body ul {
+    list-style: none;
+    padding: 0;
+}
+
+.modal-body li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #222;
+    display: flex;
+    justify-content: space-between;
+}
+
+.modal-body li strong {
+    color: var(--color-text-secondary);
+}
