@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | Raudranex Space Technologies</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+    <script src="assets/js/libraries/gsap.min.js" defer></script>
+    <script src="assets/js/libraries/ScrollTrigger.min.js" defer></script>
+    <script src="assets/js/page-animations.js" defer></script>
+    <script src="assets/js/career.js" defer></script>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <div class="page-wrapper">
+        <header class="main-header">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="website_data/logo.jpg" alt="Raudranex Aerospace Logo">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="product.html">Product</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="updates.html">Updates</a></li>
+                    <li><a href="career.html">Career</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <section class="page-hero">
+                <h1>Join Our Mission</h1>
+                <p>Be Part of the Future of Space Propulsion</p>
+            </section>
+
+            <section class="content-section">
+                <div class="section-content">
+                    <h2>Why Work at Raudranex?</h2>
+                    <p>At Raudranex, we're solving one of the most challenging problems in aerospace: developing next-generation propulsion systems. We're looking for talented engineers, researchers, and innovators who are passionate about space technology and want to make a tangible impact on humanity's presence in space.</p>
+                    <div class="benefits-grid">
+                        <div class="benefit">
+                            <h3>Deep Tech Impact</h3>
+                            <p>Work on cutting-edge technology that enables space exploration and satellite innovation.</p>
+                        </div>
+                        <div class="benefit">
+                            <h3>Collaborative Culture</h3>
+                            <p>Join a team of aerospace engineers and researchers dedicated to excellence.</p>
+                        </div>
+                        <div class="benefit">
+                            <h3>Growth Opportunity</h3>
+                            <p>Early-stage startup environment with rapid learning and advancement potential.</p>
+                        </div>
+                        <div class="benefit">
+                            <h3>Meaningful Work</h3>
+                            <p>Contribute to advancing humanity's capabilities in space technology.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section alt-bg">
+                <div class="section-content">
+                    <h2>Open Positions</h2>
+                    <div id="jobs-container" class="jobs-list">
+                        <p class="loading">Loading job positions...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <div class="section-content">
+                    <h2>Apply Now</h2>
+                    <p>Interested in a position? Submit your application below.</p>
+                    <form id="application-form" class="application-form">
+                        <div class="form-group">
+                            <label for="job_select">Position *</label>
+                            <select id="job_select" name="job_id" required>
+                                <option value="">Select a position...</option>
+                            </select>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="app_name">Full Name *</label>
+                                <input type="text" id="app_name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="app_email">Email Address *</label>
+                                <input type="email" id="app_email" name="email" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="app_phone">Phone Number *</label>
+                                <input type="tel" id="app_phone" name="phone" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="app_resume">Resume/CV (URL) *</label>
+                            <input type="url" id="app_resume" name="resume_url" placeholder="https://example.com/resume.pdf" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="app_cover">Cover Letter</label>
+                            <textarea id="app_cover" name="cover_letter" rows="5" placeholder="Tell us about yourself and why you're interested in this role..."></textarea>
+                        </div>
+                        <button type="submit" class="submit-btn">Submit Application</button>
+                        <div id="form-message" class="form-message"></div>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <footer class="main-footer">
+            <p>&copy; 2025 Raudranex Aerospace. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

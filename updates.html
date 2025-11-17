@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Updates | Raudranex Space Technologies</title>
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/pages.css">
+    <script src="assets/js/libraries/gsap.min.js" defer></script>
+    <script src="assets/js/libraries/ScrollTrigger.min.js" defer></script>
+    <script src="assets/js/page-animations.js" defer></script>
+    <script src="assets/js/updates.js" defer></script>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <div class="page-wrapper">
+        <header class="main-header">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="website_data/logo.jpg" alt="Raudranex Aerospace Logo">
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="product.html">Product</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="updates.html">Updates</a></li>
+                    <li><a href="career.html">Career</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main class="page-content">
+            <section class="page-hero">
+                <h1>Latest Updates</h1>
+                <p>News and Announcements from Raudranex</p>
+            </section>
+
+            <section class="content-section">
+                <div class="section-content">
+                    <div class="updates-filters">
+                        <button class="filter-btn active" data-category="all">All Updates</button>
+                        <button class="filter-btn" data-category="news">News</button>
+                        <button class="filter-btn" data-category="announcement">Announcements</button>
+                        <button class="filter-btn" data-category="research">Research</button>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section alt-bg">
+                <div class="section-content">
+                    <div id="updates-container" class="updates-grid">
+                        <p class="loading">Loading updates...</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="content-section">
+                <div class="section-content">
+                    <h2>Subscribe to Our Newsletter</h2>
+                    <p>Stay updated with the latest news and developments from Raudranex Space Technologies.</p>
+                    <form id="newsletter-form" class="newsletter-form">
+                        <div class="form-row">
+                            <input type="email" name="email" placeholder="Enter your email address" required>
+                            <button type="submit" class="submit-btn">Subscribe</button>
+                        </div>
+                        <div id="newsletter-message" class="form-message"></div>
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <footer class="main-footer">
+            <p>&copy; 2025 Raudranex Aerospace. All Rights Reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for full article view -->
+    <div id="article-modal" class="modal-hidden">
+        <div class="modal-content article-modal">
+            <button class="modal-close-btn">&times;</button>
+            <div class="article-content">
+                <!-- Article content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
