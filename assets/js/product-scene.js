@@ -147,15 +147,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
-            // Product animations
-            productMeshes.forEach(p => {
-                p.scale.x = p.scale.y = p.scale.z = (hoveredProduct === p) ? 1.15 : 1; // Scale up on hover
-            });
-
-        }
-
-        renderer.render(scene, camera);
-    }
+                        // Product animations
+            
+                        productMeshes.forEach(p => {
+            
+                            p.scale.x = p.scale.y = p.scale.z = (hoveredProduct === p) ? 1.15 : 1; // Scale up on hover
+            
+                        });
+            
+            
+            
+                        // Scene parallax effect
+            
+                        const targetX = mouse.x * 0.5;
+            
+                        const targetY = mouse.y * 0.5;
+            
+                        productsGroup.position.x += (targetX - productsGroup.position.x) * 0.1;
+            
+                        productsGroup.position.y += (targetY - productsGroup.position.y) * 0.1;
+            
+                    }
+            
+            
+            
+                    renderer.render(scene, camera);
+            
+                }
     animate();
 
     // Handle window resize
