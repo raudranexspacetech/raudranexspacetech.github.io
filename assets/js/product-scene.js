@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const loader = new THREE.TextureLoader();
         loader.setCrossOrigin('anonymous'); // Allow loading from different origins
         loader.load(data.image, function(texture) {
+            texture.premultipliedAlpha = true;
             material.map = texture;
             material.needsUpdate = true;
         }, undefined, function(err) {
