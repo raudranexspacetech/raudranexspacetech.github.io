@@ -53,10 +53,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createProductPlane(data, position) {
         const material = new THREE.MeshBasicMaterial({
+            transparent: true,
             side: THREE.DoubleSide
         });
 
         const loader = new THREE.TextureLoader();
+        loader.setCrossOrigin('anonymous'); // Allow loading from different origins
         loader.load(data.image, function(texture) {
             material.map = texture;
             material.needsUpdate = true;
