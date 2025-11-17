@@ -52,14 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const productMeshes = [];
 
     function createProductPlane(data, position) {
-        const texture = loader.load(data.image);
-        const material = new THREE.MeshStandardMaterial({ // Use a material that reacts to light
-            map: texture,
-            transparent: true,
-            alphaTest: 0.1, // Prevents transparent pixels from rendering black
-            roughness: 0.7,
-            metalness: 0.1
+        const material = new THREE.MeshBasicMaterial({
+            side: THREE.DoubleSide
         });
+
+        const loader = new THREE.TextureLoader();
+        loader.load(data.image, function(texture) {
+            material.map = texture;
+            material.needsUpdate = true;
+        }, undefined, function(err) {
+            console.error('An error occurred while loading the texture:', err);
+        });
+
         const geometry = new THREE.PlaneGeometry(4, 4);
         const plane = new THREE.Mesh(geometry, material);
         plane.position.copy(position);
@@ -146,11 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 p.scale.x = p.scale.y = p.scale.z = (hoveredProduct === p) ? 1.15 : 1; // Scale up on hover
             });
 
-            // Scene parallax effect
-            const targetX = mouse.x * 0.5;
-            const targetY = mouse.y * 0.5;
-            productsGroup.position.x += (targetX - productsGroup.position.x) * 0.1;
-            productsGroup.position.y += (targetY - productsGroup.position.y) * 0.1;
         }
 
         renderer.render(scene, camera);
