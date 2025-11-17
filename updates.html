@@ -3,23 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Updates | Raudranex Space Technologies</title>
+    <title>Updates | Raudranex Aerospace</title>
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/pages.css">
+
+    <!-- Animation Libraries -->
     <script src="assets/js/libraries/gsap.min.js" defer></script>
     <script src="assets/js/libraries/ScrollTrigger.min.js" defer></script>
-    <script src="assets/js/page-animations.js" defer></script>
-    <script src="assets/js/updates.js" defer></script>
+    
+    <!-- Main JavaScript File -->
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/transitions.js" defer></script>
 </head>
 <body>
+
+    <!-- Background Canvas -->
     <canvas id="starfield"></canvas>
+
+    <!-- Wrapper for all visible content to ensure correct layering -->
     <div class="page-wrapper">
+
         <header class="main-header">
             <div class="logo">
-                <a href="index.html">
-                    <img src="website_data/logo.jpg" alt="Raudranex Aerospace Logo">
-                </a>
+                <a href="index.html"><img src="assets/images/logo.jpg" alt="Raudranex Aerospace Logo"></a>
             </div>
             <nav class="main-nav">
                 <ul>
@@ -33,42 +39,18 @@
             </nav>
         </header>
 
-        <main class="page-content">
-            <section class="page-hero">
-                <h1>Latest Updates</h1>
-                <p>News and Announcements from Raudranex</p>
-            </section>
-
-            <section class="content-section">
-                <div class="section-content">
-                    <div class="updates-filters">
-                        <button class="filter-btn active" data-category="all">All Updates</button>
-                        <button class="filter-btn" data-category="news">News</button>
-                        <button class="filter-btn" data-category="announcement">Announcements</button>
-                        <button class="filter-btn" data-category="research">Research</button>
-                    </div>
-                </div>
-            </section>
-
-            <section class="content-section alt-bg">
-                <div class="section-content">
-                    <div id="updates-container" class="updates-grid">
-                        <p class="loading">Loading updates...</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="content-section">
-                <div class="section-content">
-                    <h2>Subscribe to Our Newsletter</h2>
-                    <p>Stay updated with the latest news and developments from Raudranex Space Technologies.</p>
-                    <form id="newsletter-form" class="newsletter-form">
-                        <div class="form-row">
-                            <input type="email" name="email" placeholder="Enter your email address" required>
-                            <button type="submit" class="submit-btn">Subscribe</button>
-                        </div>
-                        <div id="newsletter-message" class="form-message"></div>
-                    </form>
+        <main style="padding-top: 150px; text-align: center; min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+            <section id="updates-content" style="padding: 2rem;">
+                <h1 style="font-size: 3rem; margin-bottom: 1rem;">News & Updates</h1>
+                <p style="font-size: 1.2rem; color: var(--color-text-secondary); max-width: 800px; margin: 0 auto;">
+                    Stay tuned for the latest news, press releases, and updates from Raudranex Aerospace. We are constantly making progress in our research and development, and we will share our major milestones and achievements here.
+                </p>
+                <!-- Example of an update item -->
+                <div style="margin-top: 3rem; border-top: 1px solid var(--color-grid); padding-top: 2rem; text-align: left; max-width: 800px; margin: 3rem auto 0;">
+                    <h2 style="font-size: 1.5rem; color: var(--color-accent-blue);">Q4 2025: Key Milestone Achieved</h2>
+                    <p style="font-size: 1rem; color: var(--color-text-secondary); margin-top: 0.5rem;">
+                        We are thrilled to announce the successful completion of our prototype's preliminary ground tests. The results have exceeded our expectations and pave the way for the next phase of development.
+                    </p>
                 </div>
             </section>
         </main>
@@ -76,18 +58,7 @@
         <footer class="main-footer">
             <p>&copy; 2025 Raudranex Aerospace. All Rights Reserved.</p>
         </footer>
-    </div>
 
-    <!-- Modal for full article view -->
-    <div id="article-modal" class="modal-hidden">
-        <div class="modal-content article-modal">
-            <button class="modal-close-btn">&times;</button>
-            <div class="article-content">
-                <!-- Article content will be loaded here -->
-            </div>
-        </div>
     </div>
-
-    <script src="assets/js/main.js"></script>
 </body>
 </html>

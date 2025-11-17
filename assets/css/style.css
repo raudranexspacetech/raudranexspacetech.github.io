@@ -67,6 +67,7 @@ body {
     padding: 2rem 4rem;
     position: absolute; /* Sits on top of the hero section */
     width: 100%;
+    z-index: 10; /* Ensure header is above the 3D scene */
 }
 
 .logo img {
@@ -249,113 +250,25 @@ body {
     color: var(--color-text-secondary);
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
-    .main-header {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem 2rem;
-    }
-
-    .main-nav ul {
-        gap: 1rem;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    #hero {
-        padding: 0 1rem;
-    }
-
-    #hero h1 {
-        font-size: 2.5rem;
-    }
-
-    #hero h2 {
-        font-size: 1.5rem;
-    }
-
-    #hero p {
-        font-size: 1rem;
-    }
-
-    #hero .cta-button {
-        padding: 0.75rem 1.5rem;
-        font-size: 1rem;
-    }
-
-    #partners {
-        padding: 5rem 1rem;
-    }
-
-    .partner-logos {
-        gap: 2rem;
-        flex-direction: column;
-    }
-
-    .product-page-body {
-        overflow-y: auto;
-    }
-
-    #product-scene-container {
-        position: relative;
-        height: 500px;
-    }
-
-    .modal-content {
-        width: 95%;
-        padding: 1.5rem 1rem;
-    }
-
-    .modal-body h2 {
-        font-size: 1.8rem;
-    }
-
-    .modal-body li {
-        flex-direction: column;
-        justify-content: flex-start;
-    }
+/* --- PAGE TRANSITION STYLING --- */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--color-background);
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 1;
 }
 
-@media (max-width: 480px) {
-    .main-header {
-        padding: 1rem;
-    }
+body.is-animating-in .page-transition {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
 
-    .main-nav a {
-        font-size: 0.9rem;
-    }
-
-    #hero h1 {
-        font-size: 1.8rem;
-        margin-bottom: 0.5rem;
-    }
-
-    #hero h2 {
-        font-size: 1.2rem;
-    }
-
-    #hero p {
-        font-size: 0.9rem;
-        max-width: 100%;
-    }
-
-    .partner-logos {
-        gap: 1rem;
-    }
-
-    .product-page-body {
-        height: 100vh;
-    }
-
-    #product-scene-container {
-        height: 400px;
-    }
-
-    .modal-content {
-        width: 100%;
-        max-width: 100%;
-        border-radius: 0;
-        max-height: 90vh;
-    }
+body.is-animating-out .page-transition {
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out;
 }

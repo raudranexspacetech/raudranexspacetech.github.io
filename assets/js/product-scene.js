@@ -4,16 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
         mayukha: {
             name: "MAYUKHA",
             subtitle: "AF-MPD Thruster",
-            image: 'website_data/mayukha.png',
+            image: 'assets/images/mayukha.png',
             details: `<ul><li><strong>Thrust:</strong> 70-95 mN</li><li><strong>ISP:</strong> 1300-1400s</li><li><strong>Fuel:</strong> Ar/Xe/H2</li><li><strong>Power:</strong> 1.0 kW</li></ul>`
         },
         mihira: {
             name: "MIHIRA",
             subtitle: "RF-GRIDDED ION Thruster",
-            image: 'website_data/mihira.png',
+            image: 'assets/images/mihira.png',
             details: `<ul><li><strong>Thrust:</strong> 20-35 mN</li><li><strong>ISP:</strong> ~1050s</li><li><strong>Fuel:</strong> Air/N2</li><li><strong>Power:</strong> 400 W</li></ul>`
         }
     };
+
+    let isModalOpen = false;
 
     // --- Scene, Camera, Renderer Setup ---
     const scene = new THREE.Scene();
@@ -58,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             roughness: 0.7,
             metalness: 0.1
         });
-        const geometry = new THREE.PlaneGeometry(3, 3);
+        const geometry = new THREE.PlaneGeometry(4, 4);
         const plane = new THREE.Mesh(geometry, material);
         plane.position.copy(position);
         plane.userData = data;
@@ -66,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
         productMeshes.push(plane);
     }
     
-    createProductPlane(productData.mayukha, new THREE.Vector3(-3.5, 0, 0));
-    createProductPlane(productData.mihira, new THREE.Vector3(3.5, 0, 0));
+    createProductPlane(productData.mayukha, new THREE.Vector3(-3, 0.5, 0));
+    createProductPlane(productData.mihira, new THREE.Vector3(3, 0.5, 0));
 
     // --- TOOLTIP FOR HOVER ---
     const tooltip = document.createElement('div');
@@ -97,52 +99,59 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalBody = document.querySelector('.modal-body');
     const closeModalBtn = document.querySelector('.modal-close-btn');
     function showModal(data) {
+        isModalOpen = true;
+        hoveredProduct = null; // Prevent re-opening modal on close
         modalBody.innerHTML = `<h2>${data.name}</h2><h3>${data.subtitle}</h3>${data.details}`;
         modal.classList.remove('modal-hidden');
     }
-    function hideModal() { modal.classList.add('modal-hidden'); }
+    function hideModal(e) { 
+        if (e) e.stopPropagation(); // Prevent click from bubbling to window
+        isModalOpen = false;
+        modal.classList.add('modal-hidden'); 
+    }
     closeModalBtn.addEventListener('click', hideModal);
-    modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(); });
+    modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(e); });
 
     window.addEventListener('click', () => {
-        if (hoveredProduct) showModal(hoveredProduct.userData);
+        if (hoveredProduct && !isModalOpen) showModal(hoveredProduct.userData);
     });
 
     // --- ANIMATION LOOP ---
     function animate() {
         requestAnimationFrame(animate);
 
-        // Hover detection
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObjects(productMeshes);
-        
-        if (intersects.length > 0) {
-            const firstIntersect = intersects[0].object;
-            if (hoveredProduct !== firstIntersect) {
-                hoveredProduct = firstIntersect;
-                tooltip.textContent = hoveredProduct.userData.name;
-                tooltip.style.display = 'block';
-                document.body.style.cursor = 'pointer';
+        if (!isModalOpen) {
+            // Hover detection
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(productMeshes);
+            
+            if (intersects.length > 0) {
+                const firstIntersect = intersects[0].object;
+                if (hoveredProduct !== firstIntersect) {
+                    hoveredProduct = firstIntersect;
+                    tooltip.textContent = hoveredProduct.userData.name;
+                    tooltip.style.display = 'block';
+                    document.body.style.cursor = 'pointer';
+                }
+            } else {
+                if (hoveredProduct) {
+                    tooltip.style.display = 'none';
+                    document.body.style.cursor = 'default';
+                    hoveredProduct = null;
+                }
             }
-        } else {
-            if (hoveredProduct) {
-                tooltip.style.display = 'none';
-                document.body.style.cursor = 'default';
-                hoveredProduct = null;
-            }
-        }
-        
-        // Product animations
-        productMeshes.forEach(p => {
-            p.rotation.y += 0.002;
-            p.scale.x = p.scale.y = p.scale.z = (hoveredProduct === p) ? 1.15 : 1; // Scale up on hover
-        });
+            
+            // Product animations
+            productMeshes.forEach(p => {
+                p.scale.x = p.scale.y = p.scale.z = (hoveredProduct === p) ? 1.15 : 1; // Scale up on hover
+            });
 
-        // Scene parallax effect
-        const targetX = mouse.x * 0.5;
-        const targetY = mouse.y * 0.5;
-        productsGroup.position.x += (targetX - productsGroup.position.x) * 0.1;
-        productsGroup.position.y += (targetY - productsGroup.position.y) * 0.1;
+            // Scene parallax effect
+            const targetX = mouse.x * 0.5;
+            const targetY = mouse.y * 0.5;
+            productsGroup.position.x += (targetX - productsGroup.position.x) * 0.1;
+            productsGroup.position.y += (targetY - productsGroup.position.y) * 0.1;
+        }
 
         renderer.render(scene, camera);
     }
