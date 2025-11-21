@@ -74,7 +74,7 @@ body {
 }
 
 .logo img {
-    height: 40px; /* Adjust size as needed */
+    height: 60px; /* Adjust size as needed */
 }
 
 .main-nav ul {
@@ -173,7 +173,7 @@ main {
 }
 
 .partner-logos img {
-    height: 80px;
+    height: 120px;
     width: auto;
     object-fit: contain;
     filter: grayscale(100%) brightness(80%); /* Muted, professional look */
@@ -325,7 +325,7 @@ body.is-animating-out .page-transition {
 }
 
 .footer-left .footer-logo img {
-    height: 50px;
+    height: 70px;
     margin-bottom: 1rem;
 }
 
