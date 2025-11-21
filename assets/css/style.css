@@ -173,7 +173,7 @@ main {
 }
 
 .partner-logos img {
-    height: 120px;
+    height: 320px;
     width: auto;
     object-fit: contain;
     filter: grayscale(100%) brightness(80%); /* Muted, professional look */
