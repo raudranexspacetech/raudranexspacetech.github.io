@@ -147,6 +147,7 @@ main {
 #partners {
     padding: 10rem 2rem 10rem; /* Add more padding for scroll room */
     text-align: center;
+    overflow: hidden; /* Hide overflow for scrolling effect */
 }
 
 #partners p {
@@ -157,12 +158,39 @@ main {
     font-weight: 500;
 }
 
+.partner-logos-wrapper {
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
 .partner-logos {
     display: flex;
-    justify-content: center;
     align-items: center;
-    gap: 4rem;
-    filter: grayscale(100%) brightness(50%); /* Muted, professional look */
+    gap: 6rem;
+    animation: scroll-logos 20s linear infinite;
+    width: max-content;
+}
+
+.partner-logos img {
+    height: 80px;
+    width: auto;
+    object-fit: contain;
+    filter: grayscale(100%) brightness(80%); /* Muted, professional look */
+    transition: filter 0.3s ease;
+}
+
+.partner-logos img:hover {
+    filter: grayscale(0%) brightness(100%);
+}
+
+@keyframes scroll-logos {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%); /* Move by half (since we duplicated) */
+    }
 }
 
 /* --- PRODUCT PAGE 3D SCENE & MODAL --- */
@@ -278,4 +306,97 @@ body.is-animating-in .page-transition {
 body.is-animating-out .page-transition {
     opacity: 1;
     transition: opacity 0.5s ease-in-out;
+}
+
+/* --- FOOTER STYLING --- */
+.main-footer {
+    background-color: #0a0a0a;
+    padding: 3rem 4rem 2rem;
+    border-top: 1px solid var(--color-grid);
+    margin-top: auto;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 4rem;
+    margin-bottom: 2rem;
+}
+
+.footer-left .footer-logo img {
+    height: 50px;
+    margin-bottom: 1rem;
+}
+
+.footer-right {
+    display: flex;
+    gap: 4rem;
+    flex-wrap: wrap;
+}
+
+.footer-section h3 {
+    font-size: 0.9rem;
+    color: var(--color-accent-blue);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.footer-section p,
+.footer-section a {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.8;
+    display: block;
+}
+
+.footer-section a:hover {
+    color: var(--color-accent-blue);
+    transition: color 0.3s ease;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.social-links a {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    border: 1px solid var(--color-text-secondary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.social-links a:hover {
+    border-color: var(--color-accent-blue);
+    color: var(--color-accent-blue);
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-grid);
+    color: var(--color-text-secondary);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .footer-right {
+        flex-direction: column;
+        gap: 2rem;
+    }
 }
