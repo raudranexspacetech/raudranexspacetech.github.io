@@ -164,7 +164,7 @@ main {
     width: 100%;
     position: relative;
     height: auto;
-    min-height: 2200px; /* Accommodate large logos */
+    min-height: 750px; /* Accommodate large logos */
     display: flex;
     align-items: center;
 }
@@ -178,7 +178,7 @@ main {
 }
 
 .partner-logos img {
-    height: 2000px;
+    height: 667px;
     width: auto;
     object-fit: contain;
     filter: grayscale(100%) brightness(80%); /* Muted, professional look */
