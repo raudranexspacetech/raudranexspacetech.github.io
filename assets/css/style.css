@@ -145,17 +145,16 @@ main {
 
 /* Partners Section */
 #partners {
-    padding: 10rem 2rem 10rem; /* Add more padding for scroll room */
+    padding: 5rem 2rem; /* Reduced padding */
     text-align: center;
     overflow: visible; /* Allow logos to be fully visible */
-    min-height: 100vh; /* Ensure enough vertical space */
 }
 
 #partners p {
     color: var(--color-text-secondary);
     letter-spacing: 2px;
     font-size: 0.8rem;
-    margin-bottom: 4rem;
+    margin-bottom: 2rem;
     font-weight: 500;
 }
 
@@ -163,11 +162,14 @@ main {
     overflow: hidden;
     width: 100%;
     position: relative;
-    height: auto;
+    height: 300px;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     background-color: #ffffff; /* White background for visibility */
-    padding: 2rem 0;
+    padding: 0;
+    margin: 0;
+    line-height: 0;
 }
 
 .partner-logos {
@@ -179,7 +181,7 @@ main {
 }
 
 .partner-logos img {
-    height: 270px;
+    height: 300px;
     width: auto;
     object-fit: contain;
     filter: none; /* Remove filters for better visibility on white background */
