@@ -164,7 +164,7 @@ main {
     width: 100%;
     position: relative;
     height: auto;
-    min-height: 300px; /* Accommodate logos */
+    min-height: 270px; /* Accommodate logos */
     display: flex;
     align-items: center;
     background-color: #ffffff; /* White background for visibility */
@@ -180,7 +180,7 @@ main {
 }
 
 .partner-logos img {
-    height: 200px;
+    height: 270px;
     width: auto;
     object-fit: contain;
     filter: none; /* Remove filters for better visibility on white background */
