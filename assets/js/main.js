@@ -24,26 +24,4 @@ document.addEventListener("DOMContentLoaded", function() {
         duration: 1.5,       // Animate over 1.5 seconds
         ease: "power3.out"
     });
-
-
-    // --- VANTA.JS DOTS BACKGROUND (Particle System) ---
-    const vantaBg = document.getElementById('vanta-bg');
-    if (vantaBg && typeof VANTA !== 'undefined') {
-        VANTA.DOTS({
-            el: vantaBg,
-            mouseControls: true,
-            touchControls: true,
-            gyroControls: false,
-            minHeight: 200.00,
-            minWidth: 200.00,
-            scale: 1.00,
-            scaleMobile: 1.00,
-            color: 0x00d9ff,
-            color2: 0x9290c3,
-            backgroundColor: 0x050505,
-            size: 3.50,
-            spacing: 35.00,
-            showLines: true
-        });
-    }
 });

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.wix.com)",
+      "WebFetch(domain:cesium.com)",
+      "WebFetch(domain:sandcastle.cesium.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

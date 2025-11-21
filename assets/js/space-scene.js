@@ -1,11 +1,11 @@
-// Custom Three.js Space Scene with Earth, Satellites, and Spacecraft
+// Clean Deep Space Scene with Spacecraft
 document.addEventListener("DOMContentLoaded", function() {
     const container = document.getElementById('vanta-bg');
     if (!container) return;
 
     // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -13,208 +13,178 @@ document.addEventListener("DOMContentLoaded", function() {
     container.appendChild(renderer.domElement);
 
     // Camera position
-    camera.position.z = 30;
-    camera.position.y = 10;
-    camera.lookAt(0, 0, 0);
+    camera.position.z = 50;
+    camera.position.y = 0;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // Ambient lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 1, 100);
-    pointLight.position.set(20, 20, 20);
-    scene.add(pointLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    directionalLight.position.set(10, 10, 10);
+    scene.add(directionalLight);
 
-    // Create Earth
-    const earthGeometry = new THREE.SphereGeometry(5, 32, 32);
-    const earthMaterial = new THREE.MeshPhongMaterial({
-        color: 0x2233ff,
-        emissive: 0x112244,
-        shininess: 25,
-        transparent: true,
-        opacity: 0.8
-    });
-    const earth = new THREE.Mesh(earthGeometry, earthMaterial);
-    scene.add(earth);
+    // Create deep space star field (multiple layers for depth)
+    function createStarLayer(count, size, distance, speed) {
+        const geometry = new THREE.BufferGeometry();
+        const positions = [];
+        const colors = [];
 
-    // Add atmosphere glow
-    const glowGeometry = new THREE.SphereGeometry(5.3, 32, 32);
-    const glowMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00d9ff,
-        transparent: true,
-        opacity: 0.15,
-        side: THREE.BackSide
-    });
-    const earthGlow = new THREE.Mesh(glowGeometry, glowMaterial);
-    scene.add(earthGlow);
+        for (let i = 0; i < count; i++) {
+            const x = (Math.random() - 0.5) * distance;
+            const y = (Math.random() - 0.5) * distance;
+            const z = (Math.random() - 0.5) * distance;
+            positions.push(x, y, z);
 
-    // Create orbital rings
-    function createOrbitRing(radius, color, opacity) {
-        const curve = new THREE.EllipseCurve(
-            0, 0,
-            radius, radius,
-            0, 2 * Math.PI,
-            false,
-            0
-        );
-        const points = curve.getPoints(100);
-        const geometry = new THREE.BufferGeometry().setFromPoints(points);
-        const material = new THREE.LineBasicMaterial({
-            color: color,
+            // Vary star colors (white, blue-white, cyan)
+            const colorChoice = Math.random();
+            if (colorChoice > 0.7) {
+                colors.push(0, 0.85, 1); // Cyan
+            } else if (colorChoice > 0.4) {
+                colors.push(0.7, 0.9, 1); // Blue-white
+            } else {
+                colors.push(1, 1, 1); // White
+            }
+        }
+
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+        const material = new THREE.PointsMaterial({
+            size: size,
+            vertexColors: true,
             transparent: true,
-            opacity: opacity
+            opacity: 0.8,
+            sizeAttenuation: true
         });
-        const ellipse = new THREE.Line(geometry, material);
-        ellipse.rotation.x = Math.PI / 2;
-        return ellipse;
+
+        const stars = new THREE.Points(geometry, material);
+        stars.userData = { speed: speed };
+        return stars;
     }
 
-    const orbit1 = createOrbitRing(8, 0x00d9ff, 0.3);
-    const orbit2 = createOrbitRing(12, 0x9290c3, 0.25);
-    const orbit3 = createOrbitRing(16, 0x00d9ff, 0.2);
-    scene.add(orbit1, orbit2, orbit3);
+    // Create three star layers for depth
+    const starLayer1 = createStarLayer(2000, 0.15, 1000, 0.0001);
+    const starLayer2 = createStarLayer(1000, 0.25, 500, 0.00015);
+    const starLayer3 = createStarLayer(500, 0.4, 300, 0.0002);
 
-    // Create satellites
-    const satellites = [];
-    function createSatellite(orbitRadius, speed, size) {
-        const geometry = new THREE.BoxGeometry(size, size, size * 2);
-        const material = new THREE.MeshPhongMaterial({
+    scene.add(starLayer1, starLayer2, starLayer3);
+
+    // Create sleek spacecraft
+    function createSpacecraft() {
+        const group = new THREE.Group();
+
+        // Main body (elongated)
+        const bodyGeometry = new THREE.CylinderGeometry(0.3, 0.5, 3, 8);
+        const bodyMaterial = new THREE.MeshPhongMaterial({
+            color: 0xcccccc,
+            emissive: 0x00d9ff,
+            emissiveIntensity: 0.3,
+            shininess: 100
+        });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.rotation.x = Math.PI / 2;
+        group.add(body);
+
+        // Nose cone
+        const noseGeometry = new THREE.ConeGeometry(0.3, 1, 8);
+        const nose = new THREE.Mesh(noseGeometry, bodyMaterial);
+        nose.rotation.x = Math.PI / 2;
+        nose.position.z = 2;
+        group.add(nose);
+
+        // Wings/Solar panels
+        const wingGeometry = new THREE.BoxGeometry(3, 0.05, 0.8);
+        const wingMaterial = new THREE.MeshPhongMaterial({
             color: 0x00d9ff,
             emissive: 0x005577,
-            shininess: 100
+            transparent: true,
+            opacity: 0.8
         });
-        const satellite = new THREE.Mesh(geometry, material);
+        const wings = new THREE.Mesh(wingGeometry, wingMaterial);
+        wings.position.z = -0.5;
+        group.add(wings);
 
-        // Add solar panels
-        const panelGeometry = new THREE.BoxGeometry(size * 2, size * 0.1, size);
-        const panelMaterial = new THREE.MeshPhongMaterial({
-            color: 0x444444,
-            emissive: 0x222222
+        // Engine glow
+        const glowGeometry = new THREE.SphereGeometry(0.4, 16, 16);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+            color: 0x00d9ff,
+            transparent: true,
+            opacity: 0.6
         });
-        const panel1 = new THREE.Mesh(panelGeometry, panelMaterial);
-        const panel2 = new THREE.Mesh(panelGeometry, panelMaterial);
-        panel1.position.x = size * 1.5;
-        panel2.position.x = -size * 1.5;
-        satellite.add(panel1, panel2);
+        const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+        glow.position.z = -1.8;
+        glow.scale.set(0.6, 0.6, 1.2);
+        group.add(glow);
 
-        satellite.userData = {
-            orbitRadius: orbitRadius,
-            speed: speed,
-            angle: Math.random() * Math.PI * 2
-        };
-
-        satellites.push(satellite);
-        scene.add(satellite);
-        return satellite;
+        return group;
     }
 
-    // Create multiple satellites
-    createSatellite(8, 0.0015, 0.3);
-    createSatellite(8, 0.002, 0.25);
-    createSatellite(12, 0.001, 0.35);
-    createSatellite(12, 0.0012, 0.3);
-    createSatellite(16, 0.0008, 0.4);
-    createSatellite(16, 0.0006, 0.35);
+    // Create two spacecraft with different paths
+    const spacecraft1 = createSpacecraft();
+    const spacecraft2 = createSpacecraft();
 
-    // Create spacecraft (moving in different pattern)
-    function createSpacecraft(distance) {
-        const geometry = new THREE.ConeGeometry(0.3, 1, 4);
-        const material = new THREE.MeshPhongMaterial({
-            color: 0xffffff,
-            emissive: 0x00d9ff,
-            shininess: 100
-        });
-        const spacecraft = new THREE.Mesh(geometry, material);
-        spacecraft.userData = {
-            distance: distance,
-            speed: 0.003,
-            angle: Math.random() * Math.PI * 2,
-            height: (Math.random() - 0.5) * 10
-        };
-        scene.add(spacecraft);
-        return spacecraft;
-    }
+    spacecraft1.userData = {
+        pathRadius: 60,
+        speed: 0.002,
+        angle: 0,
+        height: 15
+    };
 
-    const spacecraft1 = createSpacecraft(20);
-    const spacecraft2 = createSpacecraft(25);
+    spacecraft2.userData = {
+        pathRadius: 80,
+        speed: 0.0015,
+        angle: Math.PI,
+        height: -10
+    };
 
-    // Create star field
-    const starsGeometry = new THREE.BufferGeometry();
-    const starsMaterial = new THREE.PointsMaterial({
-        color: 0xffffff,
-        size: 0.1,
-        transparent: true,
-        opacity: 0.8
-    });
+    scene.add(spacecraft1, spacecraft2);
 
-    const starsVertices = [];
-    for (let i = 0; i < 1000; i++) {
-        const x = (Math.random() - 0.5) * 200;
-        const y = (Math.random() - 0.5) * 200;
-        const z = (Math.random() - 0.5) * 200;
-        starsVertices.push(x, y, z);
-    }
-
-    starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
-    const starField = new THREE.Points(starsGeometry, starsMaterial);
-    scene.add(starField);
-
-    // Mouse interaction
+    // Mouse interaction variables
     let mouseX = 0;
     let mouseY = 0;
-    let targetRotationX = 0;
-    let targetRotationY = 0;
 
     document.addEventListener('mousemove', (event) => {
-        mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-        mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
     });
 
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
 
-        // Rotate Earth
-        earth.rotation.y += 0.001;
-        earthGlow.rotation.y += 0.001;
+        // Rotate star layers for parallax depth
+        starLayer1.rotation.y += starLayer1.userData.speed;
+        starLayer1.rotation.x += starLayer1.userData.speed * 0.5;
 
-        // Rotate orbital rings slowly
-        orbit1.rotation.z += 0.0002;
-        orbit2.rotation.z -= 0.00015;
-        orbit3.rotation.z += 0.0001;
+        starLayer2.rotation.y += starLayer2.userData.speed;
+        starLayer2.rotation.x -= starLayer2.userData.speed * 0.3;
 
-        // Update satellites
-        satellites.forEach(satellite => {
-            satellite.userData.angle += satellite.userData.speed;
-            satellite.position.x = Math.cos(satellite.userData.angle) * satellite.userData.orbitRadius;
-            satellite.position.z = Math.sin(satellite.userData.angle) * satellite.userData.orbitRadius;
-            satellite.lookAt(earth.position);
-            satellite.rotation.y += 0.01;
-        });
+        starLayer3.rotation.y += starLayer3.userData.speed;
 
-        // Update spacecraft
+        // Animate spacecraft along paths
         [spacecraft1, spacecraft2].forEach(craft => {
             craft.userData.angle += craft.userData.speed;
-            craft.position.x = Math.cos(craft.userData.angle) * craft.userData.distance;
-            craft.position.z = Math.sin(craft.userData.angle) * craft.userData.distance;
-            craft.position.y = craft.userData.height + Math.sin(craft.userData.angle * 2) * 2;
 
-            // Point spacecraft in direction of movement
-            const nextX = Math.cos(craft.userData.angle + 0.1) * craft.userData.distance;
-            const nextZ = Math.sin(craft.userData.angle + 0.1) * craft.userData.distance;
-            craft.lookAt(nextX, craft.position.y, nextZ);
+            // Circular path with height variation
+            craft.position.x = Math.cos(craft.userData.angle) * craft.userData.pathRadius;
+            craft.position.z = Math.sin(craft.userData.angle) * craft.userData.pathRadius - 50;
+            craft.position.y = craft.userData.height + Math.sin(craft.userData.angle * 2) * 5;
+
+            // Point in direction of travel
+            const lookX = Math.cos(craft.userData.angle + 0.1) * craft.userData.pathRadius;
+            const lookZ = Math.sin(craft.userData.angle + 0.1) * craft.userData.pathRadius - 50;
+            const lookY = craft.userData.height + Math.sin((craft.userData.angle + 0.1) * 2) * 5;
+            craft.lookAt(lookX, lookY, lookZ);
+
+            // Subtle rotation for realism
+            craft.rotation.z += 0.002;
         });
 
-        // Rotate stars slowly
-        starField.rotation.y += 0.0001;
-
-        // Camera interaction with mouse
-        targetRotationX = mouseY * 0.3;
-        targetRotationY = mouseX * 0.3;
-
-        camera.position.x += (targetRotationY * 30 - camera.position.x) * 0.05;
-        camera.position.y += (10 + targetRotationX * 10 - camera.position.y) * 0.05;
-        camera.lookAt(0, 0, 0);
+        // Camera follows mouse slightly (parallax)
+        camera.position.x += (mouseX * 10 - camera.position.x) * 0.05;
+        camera.position.y += (-mouseY * 5 - camera.position.y) * 0.05;
+        camera.lookAt(0, 0, -50);
 
         renderer.render(scene, camera);
     }
