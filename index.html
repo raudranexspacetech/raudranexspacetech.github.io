@@ -9,18 +9,23 @@
     <link rel="stylesheet" href="assets/css/reset.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
+    <!-- Three.js for VANTA -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <!-- VANTA.js DOTS Effect -->
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+
     <!-- Animation Libraries -->
     <script src="assets/js/libraries/gsap.min.js" defer></script>
     <script src="assets/js/libraries/ScrollTrigger.min.js" defer></script>
-    
+
     <!-- Main JavaScript File -->
     <script src="assets/js/main.js" defer></script>
     <script src="assets/js/transitions.js" defer></script>
 </head>
 <body>
 
-    <!-- Background Canvas -->
-    <canvas id="starfield"></canvas>
+    <!-- Background Container -->
+    <div id="vanta-bg"></div>
 
     <!-- Wrapper for all visible content to ensure correct layering -->
     <div class="page-wrapper">
