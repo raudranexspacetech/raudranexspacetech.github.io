@@ -147,14 +147,15 @@ main {
 #partners {
     padding: 10rem 2rem 10rem; /* Add more padding for scroll room */
     text-align: center;
-    overflow: hidden; /* Hide overflow for scrolling effect */
+    overflow: visible; /* Allow logos to be fully visible */
+    min-height: 100vh; /* Ensure enough vertical space */
 }
 
 #partners p {
     color: var(--color-text-secondary);
     letter-spacing: 2px;
     font-size: 0.8rem;
-    margin-bottom: 2rem;
+    margin-bottom: 4rem;
     font-weight: 500;
 }
 
@@ -162,6 +163,10 @@ main {
     overflow: hidden;
     width: 100%;
     position: relative;
+    height: auto;
+    min-height: 2200px; /* Accommodate large logos */
+    display: flex;
+    align-items: center;
 }
 
 .partner-logos {
