@@ -164,11 +164,10 @@ main {
     width: 100%;
     position: relative;
     height: auto;
-    min-height: 270px; /* Accommodate logos */
     display: flex;
     align-items: center;
     background-color: #ffffff; /* White background for visibility */
-    padding: 3rem 0;
+    padding: 2rem 0;
 }
 
 .partner-logos {
