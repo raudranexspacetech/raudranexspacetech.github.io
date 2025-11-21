@@ -164,9 +164,11 @@ main {
     width: 100%;
     position: relative;
     height: auto;
-    min-height: 750px; /* Accommodate large logos */
+    min-height: 300px; /* Accommodate logos */
     display: flex;
     align-items: center;
+    background-color: #ffffff; /* White background for visibility */
+    padding: 3rem 0;
 }
 
 .partner-logos {
@@ -178,11 +180,11 @@ main {
 }
 
 .partner-logos img {
-    height: 667px;
+    height: 200px;
     width: auto;
     object-fit: contain;
-    filter: grayscale(100%) brightness(80%); /* Muted, professional look */
-    transition: filter 0.3s ease;
+    filter: none; /* Remove filters for better visibility on white background */
+    transition: all 0.3s ease;
 }
 
 .partner-logos img:hover {
