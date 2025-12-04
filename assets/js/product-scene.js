@@ -78,6 +78,30 @@ document.addEventListener('DOMContentLoaded', () => {
     createProductPlane(productData.mayukha, new THREE.Vector3(-3, 0.5, 0));
     createProductPlane(productData.mihira, new THREE.Vector3(3, 0.5, 0));
 
+    // --- PERMANENT PRODUCT LABELS ---
+    const productLabels = [];
+
+    function createProductLabel(data) {
+        const label = document.createElement('div');
+        label.style.position = 'absolute';
+        label.style.color = '#00d9ff';
+        label.style.fontSize = '24px';
+        label.style.fontWeight = '600';
+        label.style.pointerEvents = 'none';
+        label.style.textAlign = 'center';
+        label.style.textShadow = '0 0 10px rgba(0, 217, 255, 0.5)';
+        label.style.letterSpacing = '2px';
+        label.textContent = data.name;
+        document.body.appendChild(label);
+        return label;
+    }
+
+    // Create labels for each product
+    productMeshes.forEach(mesh => {
+        const label = createProductLabel(mesh.userData);
+        productLabels.push({ mesh: mesh, element: label });
+    });
+
     // --- TOOLTIP FOR HOVER ---
     const tooltip = document.createElement('div');
     tooltip.style.position = 'absolute';
@@ -131,12 +155,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hover detection
             raycaster.setFromCamera(mouse, camera);
             const intersects = raycaster.intersectObjects(productMeshes);
-            
+
             if (intersects.length > 0) {
                 const firstIntersect = intersects[0].object;
                 if (hoveredProduct !== firstIntersect) {
                     hoveredProduct = firstIntersect;
-                    tooltip.textContent = hoveredProduct.userData.name;
+                    tooltip.textContent = hoveredProduct.userData.subtitle;
                     tooltip.style.display = 'block';
                     document.body.style.cursor = 'pointer';
                 }
@@ -147,34 +171,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     hoveredProduct = null;
                 }
             }
-            
-                        // Product animations
-            
-                        productMeshes.forEach(p => {
-            
-                            p.scale.x = p.scale.y = p.scale.z = (hoveredProduct === p) ? 1.15 : 1; // Scale up on hover
-            
-                        });
-            
-            
-            
-                        // Scene parallax effect
-            
-                        const targetX = mouse.x * 0.5;
-            
-                        const targetY = mouse.y * 0.5;
-            
-                        productsGroup.position.x += (targetX - productsGroup.position.x) * 0.1;
-            
-                        productsGroup.position.y += (targetY - productsGroup.position.y) * 0.1;
-            
-                    }
-            
-            
-            
-                    renderer.render(scene, camera);
-            
-                }
+
+            // Product animations
+            productMeshes.forEach(p => {
+                p.scale.x = p.scale.y = p.scale.z = (hoveredProduct === p) ? 1.15 : 1; // Scale up on hover
+            });
+
+            // Scene parallax effect
+            const targetX = mouse.x * 0.5;
+            const targetY = mouse.y * 0.5;
+            productsGroup.position.x += (targetX - productsGroup.position.x) * 0.1;
+            productsGroup.position.y += (targetY - productsGroup.position.y) * 0.1;
+        }
+
+        // Update product label positions to follow 3D products
+        productLabels.forEach(({ mesh, element }) => {
+            const vector = new THREE.Vector3();
+            // Get position above the product
+            vector.copy(mesh.position);
+            vector.y += 2.5; // Position above the product
+            vector.applyMatrix4(productsGroup.matrixWorld); // Apply group transformations
+            vector.project(camera); // Project to screen space
+
+            // Convert to screen coordinates
+            const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+            const y = (-(vector.y * 0.5) + 0.5) * window.innerHeight;
+
+            element.style.left = `${x}px`;
+            element.style.top = `${y}px`;
+            element.style.transform = 'translate(-50%, -50%)';
+        });
+
+        renderer.render(scene, camera);
+    }
     animate();
 
     // Handle window resize
