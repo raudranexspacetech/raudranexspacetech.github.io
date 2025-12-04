@@ -4,7 +4,10 @@
       "WebFetch(domain:www.wix.com)",
       "WebFetch(domain:cesium.com)",
       "WebFetch(domain:sandcastle.cesium.com)",
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git fetch:*)"
     ],
     "deny": [],
     "ask": []
