@@ -91,22 +91,22 @@ document.addEventListener('DOMContentLoaded', () => {
         label.style.textAlign = 'center';
         label.style.zIndex = '100';
         label.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
-        label.style.padding = '12px 24px';
+        label.style.padding = '10px 20px';
         label.style.borderRadius = '6px';
         label.style.border = '1px solid rgba(255, 255, 255, 0.3)';
 
         // Main name
         const nameDiv = document.createElement('div');
-        nameDiv.style.fontSize = '28px';
+        nameDiv.style.fontSize = '22px';
         nameDiv.style.fontWeight = '700';
-        nameDiv.style.letterSpacing = '3px';
+        nameDiv.style.letterSpacing = '2px';
         nameDiv.style.textShadow = '0 2px 10px rgba(0, 0, 0, 0.8)';
         nameDiv.style.marginBottom = '4px';
         nameDiv.textContent = data.name;
 
         // Subtitle
         const subtitleDiv = document.createElement('div');
-        subtitleDiv.style.fontSize = '14px';
+        subtitleDiv.style.fontSize = '12px';
         subtitleDiv.style.fontWeight = '400';
         subtitleDiv.style.letterSpacing = '1px';
         subtitleDiv.style.color = '#9290C3';
@@ -223,9 +223,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update product label positions to follow 3D products
         productLabels.forEach(({ mesh, element }) => {
             const vector = new THREE.Vector3();
-            // Get position above the product
+            // Get position below the product
             vector.copy(mesh.position);
-            vector.y += 2.5; // Position above the product
+            vector.y -= 2.5; // Position below the product
             vector.applyMatrix4(productsGroup.matrixWorld); // Apply group transformations
             vector.project(camera); // Project to screen space
 
