@@ -84,13 +84,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function createProductLabel(data) {
         const label = document.createElement('div');
         label.style.position = 'absolute';
-        label.style.color = '#00d9ff';
-        label.style.fontSize = '24px';
-        label.style.fontWeight = '600';
+        label.style.color = '#ffffff';
+        label.style.fontSize = '28px';
+        label.style.fontWeight = '700';
         label.style.pointerEvents = 'none';
         label.style.textAlign = 'center';
-        label.style.textShadow = '0 0 10px rgba(0, 217, 255, 0.5)';
-        label.style.letterSpacing = '2px';
+        label.style.textShadow = '0 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.3)';
+        label.style.letterSpacing = '3px';
+        label.style.zIndex = '1000';
+        label.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        label.style.padding = '8px 20px';
+        label.style.borderRadius = '4px';
+        label.style.border = '1px solid rgba(255, 255, 255, 0.3)';
         label.textContent = data.name;
         document.body.appendChild(label);
         return label;
