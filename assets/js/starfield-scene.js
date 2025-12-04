@@ -62,8 +62,8 @@ document.addEventListener("DOMContentLoaded", function() {
     let targetMouseY = 0;
 
     document.addEventListener('mousemove', (event) => {
-        targetMouseX = (event.clientX / window.innerWidth - 0.5) * 2;
-        targetMouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+        targetMouseX = (event.clientX / window.innerWidth - 0.5);
+        targetMouseY = (event.clientY / window.innerHeight - 0.5);
     });
 
     // Animation loop
@@ -94,13 +94,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         stars.geometry.attributes.position.needsUpdate = true;
 
-        // Camera follows mouse for parallax effect
-        camera.position.x = mouseX * 50;
-        camera.position.y = -mouseY * 50;
-        camera.lookAt(0, 0, 0);
-
-        // Subtle rotation based on mouse
-        stars.rotation.z = mouseX * 0.05;
+        // Camera stays in place, only look direction changes slightly with mouse (parallax)
+        camera.lookAt(mouseX * 100, -mouseY * 100, 0);
 
         renderer.render(scene, camera);
     }
