@@ -29,8 +29,8 @@ document.addEventListener("DOMContentLoaded", function() {
         const z = (Math.random() - 0.5) * 2000;
         positions.push(x, y, z);
 
-        // Random velocity for each star
-        velocities.push(Math.random() * 2 + 1);
+        // Random velocity for each star (slower speed)
+        velocities.push(Math.random() * 1 + 0.5);
 
         // Random size
         sizes.push(Math.random() * 2 + 0.5);
@@ -55,24 +55,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // Store velocities as userData
     stars.userData = { velocities: velocities };
 
-    // Mouse interaction variables
-    let mouseX = 0;
-    let mouseY = 0;
-    let targetMouseX = 0;
-    let targetMouseY = 0;
-
-    document.addEventListener('mousemove', (event) => {
-        targetMouseX = (event.clientX / window.innerWidth - 0.5);
-        targetMouseY = (event.clientY / window.innerHeight - 0.5);
-    });
-
     // Animation loop
     function animate() {
         requestAnimationFrame(animate);
-
-        // Smooth mouse following (very subtle)
-        mouseX += (targetMouseX - mouseX) * 0.02;
-        mouseY += (targetMouseY - mouseY) * 0.02;
 
         // Move stars towards camera
         const positions = stars.geometry.attributes.position.array;
@@ -94,8 +79,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         stars.geometry.attributes.position.needsUpdate = true;
 
-        // Very subtle camera tilt based on mouse (minimal parallax)
-        camera.lookAt(mouseX * 20, -mouseY * 20, 0);
+        // Camera stays fixed - no mouse interaction
+        camera.lookAt(0, 0, 0);
 
         renderer.render(scene, camera);
     }
