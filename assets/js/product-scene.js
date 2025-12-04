@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('product-scene-container').appendChild(renderer.domElement);
     
     // --- POSITION CAMERA AND ADD LIGHTS ---
-    camera.position.set(0, 1.5, 9);
+    camera.position.set(0, 2.5, 9);
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); // Add soft white light
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Add a light from the front
