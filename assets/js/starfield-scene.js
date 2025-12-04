@@ -70,9 +70,9 @@ document.addEventListener("DOMContentLoaded", function() {
     function animate() {
         requestAnimationFrame(animate);
 
-        // Smooth mouse following
-        mouseX += (targetMouseX - mouseX) * 0.05;
-        mouseY += (targetMouseY - mouseY) * 0.05;
+        // Smooth mouse following (very subtle)
+        mouseX += (targetMouseX - mouseX) * 0.02;
+        mouseY += (targetMouseY - mouseY) * 0.02;
 
         // Move stars towards camera
         const positions = stars.geometry.attributes.position.array;
@@ -94,8 +94,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
         stars.geometry.attributes.position.needsUpdate = true;
 
-        // Camera stays in place, only look direction changes slightly with mouse (parallax)
-        camera.lookAt(mouseX * 100, -mouseY * 100, 0);
+        // Very subtle camera tilt based on mouse (minimal parallax)
+        camera.lookAt(mouseX * 20, -mouseY * 20, 0);
 
         renderer.render(scene, camera);
     }
