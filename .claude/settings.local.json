@@ -3,7 +3,8 @@
     "allow": [
       "WebFetch(domain:www.wix.com)",
       "WebFetch(domain:cesium.com)",
-      "WebFetch(domain:sandcastle.cesium.com)"
+      "WebFetch(domain:sandcastle.cesium.com)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
