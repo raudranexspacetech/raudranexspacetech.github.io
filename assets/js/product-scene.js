@@ -5,13 +5,15 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "MAYUKHA",
             subtitle: "AF-MPD Thruster",
             image: 'assets/images/mayukha.png',
-            details: `<ul><li><strong>Thrust:</strong> 70-95 mN</li><li><strong>ISP:</strong> 1300-1400s</li><li><strong>Fuel:</strong> Ar/Xe/H2</li><li><strong>Power:</strong> 1.0 kW</li></ul>`
+            description: "A high-power, scalable MPD thruster delivering strong thrust, low erosion, and precise control. Designed for agile orbital maneuvers and dependable performance across mission profiles.",
+            specs: `<ul><li><strong>Thrust:</strong> 70-95 mN</li><li><strong>ISP:</strong> 1300-1400s</li><li><strong>Fuel:</strong> Ar/Xe/H2</li><li><strong>Power:</strong> 1.0 kW</li></ul>`
         },
         mihira: {
             name: "MIHIRA",
-            subtitle: "RF-GRIDDED ION Thruster",
+            subtitle: "RF-Gridded Ion Thruster",
             image: 'assets/images/mihira.png',
-            details: `<ul><li><strong>Thrust:</strong> 20-35 mN</li><li><strong>ISP:</strong> ~1050s</li><li><strong>Fuel:</strong> Air/N2</li><li><strong>Power:</strong> 400 W</li></ul>`
+            description: "An ultra-efficient ion thruster built for long-duration missions with air-breathing capability, high Isp, and low signature. Ideal for VLEO, defense, and deep-space operations.",
+            specs: `<ul><li><strong>Thrust:</strong> 20-35 mN</li><li><strong>ISP:</strong> ~1050s</li><li><strong>Fuel:</strong> Air/N2</li><li><strong>Power:</strong> 400 W</li></ul>`
         }
     };
 
@@ -85,18 +87,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const label = document.createElement('div');
         label.style.position = 'absolute';
         label.style.color = '#ffffff';
-        label.style.fontSize = '28px';
-        label.style.fontWeight = '700';
         label.style.pointerEvents = 'none';
         label.style.textAlign = 'center';
-        label.style.textShadow = '0 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.3)';
-        label.style.letterSpacing = '3px';
-        label.style.zIndex = '1000';
-        label.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-        label.style.padding = '8px 20px';
-        label.style.borderRadius = '4px';
+        label.style.zIndex = '100';
+        label.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+        label.style.padding = '12px 24px';
+        label.style.borderRadius = '6px';
         label.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-        label.textContent = data.name;
+
+        // Main name
+        const nameDiv = document.createElement('div');
+        nameDiv.style.fontSize = '28px';
+        nameDiv.style.fontWeight = '700';
+        nameDiv.style.letterSpacing = '3px';
+        nameDiv.style.textShadow = '0 2px 10px rgba(0, 0, 0, 0.8)';
+        nameDiv.style.marginBottom = '4px';
+        nameDiv.textContent = data.name;
+
+        // Subtitle
+        const subtitleDiv = document.createElement('div');
+        subtitleDiv.style.fontSize = '14px';
+        subtitleDiv.style.fontWeight = '400';
+        subtitleDiv.style.letterSpacing = '1px';
+        subtitleDiv.style.color = '#9290C3';
+        subtitleDiv.textContent = data.subtitle;
+
+        label.appendChild(nameDiv);
+        label.appendChild(subtitleDiv);
         document.body.appendChild(label);
         return label;
     }
@@ -137,13 +154,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function showModal(data) {
         isModalOpen = true;
         hoveredProduct = null; // Prevent re-opening modal on close
-        modalBody.innerHTML = `<h2>${data.name}</h2><h3>${data.subtitle}</h3>${data.details}`;
+        modalBody.innerHTML = `
+            <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">${data.name}</h2>
+            <h3 style="font-size: 1.3rem; color: var(--color-text-secondary); margin-bottom: 1.5rem;">${data.subtitle}</h3>
+            <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem; color: var(--color-text-secondary);">${data.description}</p>
+            <h4 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--color-accent-blue);">Specifications</h4>
+            ${data.specs}
+        `;
         modal.classList.remove('modal-hidden');
+        // Hide labels when modal is open
+        productLabels.forEach(({ element }) => {
+            element.style.display = 'none';
+        });
     }
-    function hideModal(e) { 
+    function hideModal(e) {
         if (e) e.stopPropagation(); // Prevent click from bubbling to window
         isModalOpen = false;
-        modal.classList.add('modal-hidden'); 
+        modal.classList.add('modal-hidden');
+        // Show labels when modal is closed
+        productLabels.forEach(({ element }) => {
+            element.style.display = 'block';
+        });
     }
     closeModalBtn.addEventListener('click', hideModal);
     modal.addEventListener('click', (e) => { if (e.target === modal) hideModal(e); });
