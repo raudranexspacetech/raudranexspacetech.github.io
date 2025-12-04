@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
             subtitle: "AF-MPD Thruster",
             image: 'assets/images/mayukha.png',
             description: "A high-power, scalable MPD thruster delivering strong thrust, low erosion, and precise control. Designed for agile orbital maneuvers and dependable performance across mission profiles.",
-            specs: `<ul><li><strong>Thrust:</strong> 70-95 mN</li><li><strong>ISP:</strong> 1300-1400s</li><li><strong>Fuel:</strong> Ar/Xe/H2</li><li><strong>Power:</strong> 1.0 kW</li></ul>`
+            specs: `<ul><li><strong>Thrust:</strong> 70-95 mN</li><li><strong>ISP:</strong> 1300-1400s</li><li><strong>Fuel:</strong> Argon</li><li><strong>Power:</strong> 1.0 kW</li></ul>`
         },
         mihira: {
             name: "MIHIRA",
             subtitle: "RF-Gridded Ion Thruster",
             image: 'assets/images/mihira.png',
             description: "An ultra-efficient ion thruster built for long-duration missions with air-breathing capability, high Isp, and low signature. Ideal for VLEO, defense, and deep-space operations.",
-            specs: `<ul><li><strong>Thrust:</strong> 20-35 mN</li><li><strong>ISP:</strong> ~1050s</li><li><strong>Fuel:</strong> Air/N2</li><li><strong>Power:</strong> 400 W</li></ul>`
+            specs: `<ul><li><strong>Thrust:</strong> 20-35 mN</li><li><strong>ISP:</strong> ~2000s</li><li><strong>Fuel:</strong> Air/N2</li><li><strong>Power:</strong> 400 W</li></ul>`
         }
     };
 
