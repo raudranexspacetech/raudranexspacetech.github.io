@@ -77,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
         productMeshes.push(plane);
     }
     
-    createProductPlane(productData.mayukha, new THREE.Vector3(-3, 0.5, 0));
-    createProductPlane(productData.mihira, new THREE.Vector3(3, 0.5, 0));
+    createProductPlane(productData.mayukha, new THREE.Vector3(-4, 0.5, 0));
+    createProductPlane(productData.mihira, new THREE.Vector3(4, 0.5, 0));
 
     // --- PERMANENT PRODUCT LABELS ---
     const productLabels = [];
