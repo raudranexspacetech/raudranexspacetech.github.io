@@ -4,8 +4,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Scene setup
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505); // Dark background
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
