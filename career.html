@@ -33,6 +33,114 @@
         .position-button:hover {
             background: #4a4a4a !important;
         }
+
+        /* Responsive Design for Career Page */
+        @media (max-width: 1024px) {
+            main {
+                padding-top: 100px !important;
+            }
+
+            #career-content h1 {
+                font-size: 2.8rem !important;
+            }
+
+            #career-content > p {
+                font-size: 1.1rem !important;
+            }
+
+            #career-content h2 {
+                font-size: 2rem !important;
+            }
+
+            #career-content > div:nth-child(3) {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1.5rem !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            main {
+                padding-top: 80px !important;
+                padding-bottom: 2rem !important;
+            }
+
+            #career-content {
+                padding: 0 1.5rem !important;
+            }
+
+            #career-content h1 {
+                font-size: 2.2rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            #career-content > p {
+                font-size: 1.05rem !important;
+                margin-bottom: 3rem !important;
+            }
+
+            #career-content h2 {
+                font-size: 1.8rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            #career-content > div:nth-child(3) {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                margin-bottom: 3rem !important;
+            }
+
+            .position-card h3 {
+                font-size: 1.2rem !important;
+            }
+
+            #career-content > div:last-child {
+                padding: 1.5rem !important;
+            }
+
+            #career-content > div:last-child h3 {
+                font-size: 1.2rem !important;
+            }
+
+            #career-content > div:last-child p {
+                font-size: 1rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #career-content h1 {
+                font-size: 1.8rem !important;
+            }
+
+            #career-content > p {
+                font-size: 0.95rem !important;
+            }
+
+            #career-content h2 {
+                font-size: 1.5rem !important;
+            }
+
+            .position-card {
+                padding: 1.5rem !important;
+            }
+
+            .position-card h3 {
+                font-size: 1.1rem !important;
+                margin-bottom: 0.8rem !important;
+            }
+
+            .position-button {
+                padding: 0.6rem 1.2rem !important;
+                font-size: 0.85rem !important;
+            }
+
+            #career-content > div:last-child h3 {
+                font-size: 1.1rem !important;
+            }
+
+            #career-content > div:last-child p {
+                font-size: 0.95rem !important;
+            }
+        }
     </style>
 </head>
 <body>

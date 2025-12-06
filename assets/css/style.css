@@ -397,7 +397,131 @@ body.is-animating-out .page-transition {
     font-size: 0.85rem;
 }
 
+/* ========================================
+   RESPONSIVE DESIGN - MEDIA QUERIES
+   ======================================== */
+
+/* --- TABLET LANDSCAPE & SMALL LAPTOPS (1024px) --- */
+@media (max-width: 1024px) {
+    /* Header & Navigation */
+    .main-header {
+        padding: 1.5rem 2rem;
+    }
+
+    .logo img {
+        height: 50px;
+    }
+
+    .main-nav ul {
+        gap: 1.5rem;
+    }
+
+    .main-nav a {
+        font-size: 0.9rem;
+    }
+
+    /* Hero Section */
+    #hero h1 {
+        font-size: 4rem;
+    }
+
+    #hero p {
+        font-size: 1.15rem;
+    }
+
+    /* Partner Logos */
+    .partner-logos-wrapper {
+        height: 200px;
+    }
+
+    .partner-logos img {
+        height: 200px;
+    }
+
+    /* Footer */
+    .main-footer {
+        padding: 2.5rem 2rem 1.5rem;
+    }
+}
+
+/* --- TABLET PORTRAIT (768px) --- */
 @media (max-width: 768px) {
+    /* Header & Navigation */
+    .main-header {
+        padding: 1rem 1.5rem;
+        flex-direction: column;
+        gap: 1rem;
+        position: relative;
+    }
+
+    .logo img {
+        height: 45px;
+    }
+
+    .main-nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .main-nav a {
+        font-size: 0.85rem;
+    }
+
+    /* Hero Section */
+    #hero {
+        padding: 0 1.5rem;
+    }
+
+    #hero h1 {
+        font-size: 3rem;
+    }
+
+    #hero h2 {
+        font-size: 1.3rem;
+    }
+
+    #hero p {
+        font-size: 1.05rem;
+    }
+
+    .cta-button {
+        padding: 0.9rem 2rem;
+        font-size: 1rem;
+    }
+
+    /* Partner Logos */
+    #partners {
+        padding: 3rem 1.5rem;
+    }
+
+    .partner-logos-wrapper {
+        height: 150px;
+    }
+
+    .partner-logos img {
+        height: 150px;
+    }
+
+    .partner-logos {
+        gap: 4rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        padding: 1.5rem 2rem;
+        width: 95%;
+    }
+
+    .modal-body h2 {
+        font-size: 2rem;
+    }
+
+    /* Footer */
+    .main-footer {
+        padding: 2rem 1.5rem 1rem;
+    }
+
     .footer-content {
         flex-direction: column;
         gap: 2rem;
@@ -406,5 +530,127 @@ body.is-animating-out .page-transition {
     .footer-right {
         flex-direction: column;
         gap: 2rem;
+    }
+
+    .footer-left .footer-logo img {
+        height: 60px;
+    }
+}
+
+/* --- MOBILE LANDSCAPE (480px) --- */
+@media (max-width: 480px) {
+    /* Header & Navigation */
+    .main-header {
+        padding: 1rem;
+    }
+
+    .logo img {
+        height: 40px;
+    }
+
+    .main-nav ul {
+        gap: 0.8rem;
+    }
+
+    .main-nav a {
+        font-size: 0.75rem;
+    }
+
+    /* Hero Section */
+    #hero {
+        padding: 0 1rem;
+        min-height: 90vh;
+    }
+
+    #hero h1 {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+    }
+
+    #hero h2 {
+        font-size: 1.1rem;
+    }
+
+    #hero p {
+        font-size: 0.95rem;
+        max-width: 100%;
+    }
+
+    .cta-button {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+        margin-top: 1.5rem;
+    }
+
+    /* Partner Section */
+    #partners {
+        padding: 2rem 1rem;
+    }
+
+    #partners p {
+        font-size: 0.7rem;
+    }
+
+    .partner-logos-wrapper {
+        height: 120px;
+    }
+
+    .partner-logos img {
+        height: 120px;
+    }
+
+    .partner-logos {
+        gap: 3rem;
+    }
+
+    /* Modal */
+    .modal-content {
+        padding: 1.5rem;
+        width: 95%;
+        max-width: 100%;
+    }
+
+    .modal-body h2 {
+        font-size: 1.6rem;
+    }
+
+    .modal-body h3 {
+        font-size: 0.9rem;
+    }
+
+    .modal-body li {
+        padding: 0.6rem 0;
+        font-size: 0.9rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.3rem;
+    }
+
+    /* Footer */
+    .main-footer {
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    .footer-left .footer-logo img {
+        height: 50px;
+    }
+
+    .footer-section h3 {
+        font-size: 0.85rem;
+    }
+
+    .footer-section p,
+    .footer-section a {
+        font-size: 0.85rem;
+    }
+
+    .social-links a {
+        width: 32px;
+        height: 32px;
+        font-size: 0.85rem;
+    }
+
+    .footer-bottom {
+        font-size: 0.8rem;
     }
 }

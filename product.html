@@ -16,6 +16,67 @@
     <!-- Page-specific script -->
     <script src="assets/js/product-scene.js" defer></script>
     <script src="assets/js/transitions.js" defer></script>
+
+    <style>
+        /* Responsive Design for Product Page */
+        @media (max-width: 1024px) {
+            #product-intro {
+                top: 120px !important;
+                max-width: 90% !important;
+            }
+
+            #product-intro h1 {
+                font-size: 1.8rem !important;
+            }
+
+            #product-intro p {
+                font-size: 0.95rem !important;
+                margin-bottom: 3rem !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            #product-intro {
+                top: 100px !important;
+                width: 95% !important;
+                padding: 0 1rem !important;
+            }
+
+            #product-intro h1 {
+                font-size: 1.5rem !important;
+                white-space: normal !important;
+                line-height: 1.4 !important;
+            }
+
+            #product-intro p {
+                font-size: 0.9rem !important;
+                line-height: 1.6 !important;
+                margin-bottom: 2rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-header {
+                padding: 0.8rem 1rem !important;
+            }
+
+            #product-intro {
+                top: 80px !important;
+                padding: 0 0.5rem !important;
+            }
+
+            #product-intro h1 {
+                font-size: 1.2rem !important;
+                margin-bottom: 1rem !important;
+            }
+
+            #product-intro p {
+                font-size: 0.85rem !important;
+                line-height: 1.5 !important;
+                margin-bottom: 1.5rem !important;
+            }
+        }
+    </style>
 </head>
 <body class="product-page-body">
 
