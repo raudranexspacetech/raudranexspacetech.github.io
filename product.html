@@ -18,23 +18,17 @@
     <script src="assets/js/transitions.js" defer></script>
 
     <style>
-        /* Mobile Product Section */
+        /* Mobile Product Section - Simple Vertical Layout */
         #mobile-products {
             display: none;
             background-color: #050505;
             min-height: 100vh;
-            padding: 2rem 1rem;
-        }
-
-        #mobile-products-intro {
+            padding: 1.5rem;
             text-align: center;
-            padding: 0 1rem 2rem;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
-        #mobile-products-intro h1 {
-            font-size: 1.5rem;
+        #mobile-products h1 {
+            font-size: 1.4rem;
             font-weight: 600;
             color: #ffffff;
             margin-bottom: 1rem;
@@ -42,89 +36,37 @@
             line-height: 1.4;
         }
 
-        #mobile-products-intro p {
-            font-size: 0.9rem;
-            line-height: 1.7;
-            color: #9290C3;
-        }
-
-        .mobile-products-container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .mobile-product-card {
-            background: rgba(27, 26, 85, 0.3);
-            border: 1px solid rgba(0, 217, 255, 0.2);
-            border-radius: 10px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .mobile-product-card img {
-            width: 100%;
-            max-width: 200px;
-            height: auto;
-            margin: 0 auto 1.5rem;
-            display: block;
-        }
-
-        .mobile-product-card h2 {
-            font-size: 1.6rem;
-            color: #ffffff;
-            margin-bottom: 0.3rem;
-            letter-spacing: 2px;
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .mobile-product-card h3 {
-            font-size: 0.9rem;
-            color: #00d9ff;
-            margin-bottom: 1.2rem;
-            text-align: center;
-        }
-
-        .mobile-product-card p {
+        #mobile-products > p {
             font-size: 0.9rem;
             line-height: 1.6;
             color: #9290C3;
-            margin-bottom: 1.5rem;
-            text-align: left;
+            margin-bottom: 3rem;
+            padding: 0 0.5rem;
         }
 
-        .mobile-product-card h4 {
-            font-size: 1rem;
-            color: #00d9ff;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            text-align: left;
+        .mobile-product-item {
+            margin-bottom: 3rem;
         }
 
-        .mobile-product-card ul {
-            list-style: none;
-            padding: 0;
-            text-align: left;
+        .mobile-product-item img {
+            width: 100%;
+            max-width: 280px;
+            height: auto;
+            margin: 0 auto 1rem;
+            display: block;
         }
 
-        .mobile-product-card li {
-            padding: 0.6rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.85rem;
+        .mobile-product-item h2 {
+            font-size: 1.6rem;
             color: #ffffff;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            letter-spacing: 2px;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
         }
 
-        .mobile-product-card li:last-child {
-            border-bottom: none;
-        }
-
-        .mobile-product-card li strong {
-            color: #9290C3;
-            font-weight: 500;
+        .mobile-product-item h3 {
+            font-size: 0.95rem;
+            color: #00d9ff;
         }
 
         /* Responsive Design for Product Page */
@@ -149,7 +91,7 @@
                 background-color: rgba(5, 5, 5, 0.95) !important;
             }
 
-            /* Hide 3D scene and show mobile cards */
+            /* Hide 3D scene and show mobile version */
             #product-scene-container {
                 display: none !important;
             }
@@ -162,10 +104,6 @@
                 display: block !important;
                 padding-top: 140px;
             }
-
-            .mobile-product-card h2 {
-                font-size: 1.6rem;
-            }
         }
 
         @media (max-width: 480px) {
@@ -176,45 +114,29 @@
 
             #mobile-products {
                 padding-top: 200px !important;
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
 
-            #mobile-products-intro {
-                padding: 0 0.5rem 1.5rem;
+            #mobile-products h1 {
+                font-size: 1.2rem;
             }
 
-            #mobile-products-intro h1 {
-                font-size: 1.3rem;
-            }
-
-            #mobile-products-intro p {
+            #mobile-products > p {
                 font-size: 0.85rem;
+                margin-bottom: 2.5rem;
             }
 
-            .mobile-product-card {
-                padding: 1.5rem;
-                margin-bottom: 1.5rem;
+            .mobile-product-item img {
+                max-width: 240px;
             }
 
-            .mobile-product-card img {
-                max-width: 180px;
-            }
-
-            .mobile-product-card h2 {
+            .mobile-product-item h2 {
                 font-size: 1.4rem;
             }
 
-            .mobile-product-card h3 {
+            .mobile-product-item h3 {
                 font-size: 0.85rem;
-            }
-
-            .mobile-product-card p {
-                font-size: 0.85rem;
-            }
-
-            .mobile-product-card li {
-                font-size: 0.8rem;
             }
         }
     </style>
@@ -249,41 +171,21 @@
     <!-- Container for our 3D scene -->
     <div id="product-scene-container"></div>
 
-    <!-- Mobile Product Cards (shown only on mobile) -->
+    <!-- Mobile Product View (shown only on mobile) -->
     <div id="mobile-products">
-        <div id="mobile-products-intro">
-            <h1>Next-Generation Plasma Propulsion Architecture</h1>
-            <p>We build advanced plasma-based propulsion systems designed to offer precise, high-thrust mobility in an ultra-compact form factor. Designed for plug-and-play integration, our modules simplify spacecraft engineering while enabling efficient orbit transfers, agile maneuvering, and extended mission lifetimes.</p>
+        <h1>Next-Generation Plasma Propulsion Architecture</h1>
+        <p>We build advanced plasma-based propulsion systems designed to offer precise, high-thrust mobility in an ultra-compact form factor. Designed for plug-and-play integration, our modules simplify spacecraft engineering while enabling efficient orbit transfers, agile maneuvering, and extended mission lifetimes.</p>
+
+        <div class="mobile-product-item">
+            <img src="assets/images/mayukha.png" alt="MAYUKHA AF-MPD Thruster">
+            <h2>MAYUKHA</h2>
+            <h3>AF-MPD Thruster</h3>
         </div>
 
-        <div class="mobile-products-container">
-            <div class="mobile-product-card">
-                <img src="assets/images/mayukha.png" alt="MAYUKHA AF-MPD Thruster">
-                <h2>MAYUKHA</h2>
-                <h3>AF-MPD Thruster</h3>
-                <p>A high-power, scalable MPD thruster delivering strong thrust, low erosion, and precise control. Designed for agile orbital maneuvers and dependable performance across mission profiles.</p>
-                <h4>Specifications</h4>
-                <ul>
-                    <li><strong>Thrust:</strong> <span>70-95 mN</span></li>
-                    <li><strong>ISP:</strong> <span>1300-1400s</span></li>
-                    <li><strong>Fuel:</strong> <span>Argon</span></li>
-                    <li><strong>Power:</strong> <span>1.0 kW</span></li>
-                </ul>
-            </div>
-
-            <div class="mobile-product-card">
-                <img src="assets/images/mihira.png" alt="MIHIRA RF-Gridded Ion Thruster">
-                <h2>MIHIRA</h2>
-                <h3>RF-Gridded Ion Thruster</h3>
-                <p>An ultra-efficient ion thruster built for long-duration missions with air-breathing capability, high Isp, and low signature. Ideal for VLEO, defense, and deep-space operations.</p>
-                <h4>Specifications</h4>
-                <ul>
-                    <li><strong>Thrust:</strong> <span>20-35 mN</span></li>
-                    <li><strong>ISP:</strong> <span>~2000s</span></li>
-                    <li><strong>Fuel:</strong> <span>Air/N2</span></li>
-                    <li><strong>Power:</strong> <span>400 W</span></li>
-                </ul>
-            </div>
+        <div class="mobile-product-item">
+            <img src="assets/images/mihira.png" alt="MIHIRA RF-Gridded Ion Thruster">
+            <h2>MIHIRA</h2>
+            <h3>RF-Gridded Ion Thruster</h3>
         </div>
     </div>
 
