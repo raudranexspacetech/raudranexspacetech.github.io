@@ -18,6 +18,74 @@
     <script src="assets/js/transitions.js" defer></script>
 
     <style>
+        /* Mobile Product Cards */
+        #mobile-products {
+            display: none;
+            padding: 2rem 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mobile-product-card {
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .mobile-product-card img {
+            width: 100%;
+            max-width: 250px;
+            height: auto;
+            margin: 0 auto 1.5rem;
+            display: block;
+        }
+
+        .mobile-product-card h2 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .mobile-product-card h3 {
+            font-size: 1rem;
+            color: #9290C3;
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-product-card p {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #9290C3;
+            margin-bottom: 1.5rem;
+        }
+
+        .mobile-product-card h4 {
+            font-size: 1.1rem;
+            color: #00d9ff;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .mobile-product-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-product-card li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        .mobile-product-card li strong {
+            color: #9290C3;
+        }
+
         /* Responsive Design for Product Page */
         @media (max-width: 1024px) {
             #product-intro {
@@ -40,22 +108,22 @@
                 background-color: rgba(5, 5, 5, 0.95) !important;
             }
 
+            /* Hide 3D scene and show mobile cards */
+            #product-scene-container {
+                display: none !important;
+            }
+
             #product-intro {
-                top: 140px !important;
-                width: 95% !important;
-                padding: 0 1rem !important;
+                display: none !important;
             }
 
-            #product-intro h1 {
-                font-size: 1.6rem !important;
-                white-space: normal !important;
-                line-height: 1.4 !important;
+            #mobile-products {
+                display: block !important;
+                padding-top: 140px;
             }
 
-            #product-intro p {
-                font-size: 0.95rem !important;
-                line-height: 1.7 !important;
-                margin-bottom: 2rem !important;
+            .mobile-product-card h2 {
+                font-size: 1.6rem;
             }
         }
 
@@ -65,8 +133,26 @@
                 background-color: rgba(5, 5, 5, 0.95) !important;
             }
 
-            #product-intro {
-                display: none !important;
+            #mobile-products {
+                padding-top: 200px !important;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .mobile-product-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .mobile-product-card h2 {
+                font-size: 1.4rem;
+            }
+
+            .mobile-product-card h3 {
+                font-size: 0.9rem;
+            }
+
+            .mobile-product-card p {
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -100,6 +186,37 @@
 
     <!-- Container for our 3D scene -->
     <div id="product-scene-container"></div>
+
+    <!-- Mobile Product Cards (shown only on mobile) -->
+    <div id="mobile-products">
+        <div class="mobile-product-card">
+            <img src="assets/images/mayukha.png" alt="MAYUKHA AF-MPD Thruster">
+            <h2>MAYUKHA</h2>
+            <h3>AF-MPD Thruster</h3>
+            <p>A high-power, scalable MPD thruster delivering strong thrust, low erosion, and precise control. Designed for agile orbital maneuvers and dependable performance across mission profiles.</p>
+            <h4>Specifications</h4>
+            <ul>
+                <li><strong>Thrust:</strong> 70-95 mN</li>
+                <li><strong>ISP:</strong> 1300-1400s</li>
+                <li><strong>Fuel:</strong> Argon</li>
+                <li><strong>Power:</strong> 1.0 kW</li>
+            </ul>
+        </div>
+
+        <div class="mobile-product-card">
+            <img src="assets/images/mihira.png" alt="MIHIRA RF-Gridded Ion Thruster">
+            <h2>MIHIRA</h2>
+            <h3>RF-Gridded Ion Thruster</h3>
+            <p>An ultra-efficient ion thruster built for long-duration missions with air-breathing capability, high Isp, and low signature. Ideal for VLEO, defense, and deep-space operations.</p>
+            <h4>Specifications</h4>
+            <ul>
+                <li><strong>Thrust:</strong> 20-35 mN</li>
+                <li><strong>ISP:</strong> ~2000s</li>
+                <li><strong>Fuel:</strong> Air/N2</li>
+                <li><strong>Power:</strong> 400 W</li>
+            </ul>
+        </div>
+    </div>
 
     <!-- Hidden Modal for Product Details -->
     <div id="product-modal" class="modal-hidden">
