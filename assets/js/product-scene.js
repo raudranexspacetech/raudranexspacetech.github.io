@@ -27,7 +27,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('product-scene-container').appendChild(renderer.domElement);
     
     // --- POSITION CAMERA AND ADD LIGHTS ---
-    camera.position.set(0, 2.5, 9);
+    // Adjust camera position based on screen size
+    const isMobileView = window.innerWidth <= 768;
+    if (isMobileView) {
+        camera.position.set(0, 1, 12); // Pull camera back for vertical layout
+    } else {
+        camera.position.set(0, 2.5, 9); // Default desktop position
+    }
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); // Add soft white light
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5); // Add a light from the front
@@ -77,8 +83,17 @@ document.addEventListener('DOMContentLoaded', () => {
         productMeshes.push(plane);
     }
     
-    createProductPlane(productData.mayukha, new THREE.Vector3(-4, 1.8, 0));
-    createProductPlane(productData.mihira, new THREE.Vector3(4, 1.8, 0));
+    // Position products based on screen size
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        // Vertical layout for mobile
+        createProductPlane(productData.mayukha, new THREE.Vector3(0, 2.5, 0));
+        createProductPlane(productData.mihira, new THREE.Vector3(0, -0.5, 0));
+    } else {
+        // Horizontal layout for desktop
+        createProductPlane(productData.mayukha, new THREE.Vector3(-4, 1.8, 0));
+        createProductPlane(productData.mihira, new THREE.Vector3(4, 1.8, 0));
+    }
 
     // --- PERMANENT PRODUCT LABELS ---
     const productLabels = [];
@@ -247,5 +262,19 @@ document.addEventListener('DOMContentLoaded', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Reposition products and camera based on new screen size
+        const isMobileNow = window.innerWidth <= 768;
+        if (isMobileNow) {
+            // Vertical layout for mobile
+            camera.position.set(0, 1, 12);
+            if (productMeshes[0]) productMeshes[0].position.set(0, 2.5, 0);
+            if (productMeshes[1]) productMeshes[1].position.set(0, -0.5, 0);
+        } else {
+            // Horizontal layout for desktop
+            camera.position.set(0, 2.5, 9);
+            if (productMeshes[0]) productMeshes[0].position.set(-4, 1.8, 0);
+            if (productMeshes[1]) productMeshes[1].position.set(4, 1.8, 0);
+        }
     });
 });
