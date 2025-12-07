@@ -18,63 +18,64 @@
     <script src="assets/js/transitions.js" defer></script>
 
     <style>
-        /* Mobile Product Section - Simple Vertical Layout */
+        /* Mobile Product Section - Clean Simple Layout */
         #mobile-products {
             display: none;
-            background-color: #050505;
-            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000000;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 5;
+        }
+
+        .mobile-content-wrapper {
             padding: 2rem 1.5rem;
             text-align: center;
-            max-width: 100%;
         }
 
-        #mobile-products h1 {
-            font-size: 1.4rem;
+        .mobile-content-wrapper h1 {
+            font-size: 1.3rem;
             font-weight: 600;
             color: #ffffff;
-            margin: 0 auto 1.5rem;
-            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
             line-height: 1.4;
-            max-width: 90%;
+            padding: 0 1rem;
         }
 
-        #mobile-products > p {
+        .mobile-content-wrapper > p {
             font-size: 0.9rem;
-            line-height: 1.7;
-            color: #9290C3;
-            margin: 0 auto 4rem;
-            max-width: 90%;
+            line-height: 1.6;
+            color: #b0b0b0;
+            margin-bottom: 3rem;
+            padding: 0 1rem;
         }
 
         .mobile-product-item {
-            margin: 0 auto 4rem;
-            max-width: 90%;
-        }
-
-        .mobile-product-item:last-child {
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .mobile-product-item img {
-            width: 100%;
-            max-width: 250px;
+            width: 250px;
             height: auto;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 1rem;
             display: block;
         }
 
         .mobile-product-item h2 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             color: #ffffff;
             letter-spacing: 2px;
             font-weight: 700;
-            margin: 0 0 0.5rem 0;
+            margin-bottom: 0.3rem;
         }
 
         .mobile-product-item h3 {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #00d9ff;
-            margin: 0;
         }
 
         /* Responsive Design for Product Page */
@@ -95,63 +96,42 @@
         }
 
         @media (max-width: 768px) {
-            .main-header {
-                background-color: rgba(5, 5, 5, 0.95) !important;
-            }
-
-            /* Hide 3D scene and show mobile version */
-            #product-scene-container {
-                display: none !important;
-            }
-
-            #product-intro {
-                display: none !important;
-            }
-
+            /* Show mobile version and hide everything else */
             #mobile-products {
                 display: block !important;
+            }
+
+            .mobile-content-wrapper {
                 padding-top: 140px;
+            }
+
+            #product-scene-container,
+            #product-intro {
+                display: none !important;
             }
         }
 
         @media (max-width: 480px) {
-            .main-header {
-                padding: 0.5rem 1rem !important;
-                background-color: rgba(5, 5, 5, 0.95) !important;
-            }
-
-            #mobile-products {
-                padding-top: 200px !important;
+            .mobile-content-wrapper {
+                padding-top: 200px;
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
 
-            #mobile-products h1 {
+            .mobile-content-wrapper h1 {
                 font-size: 1.2rem;
-                margin-bottom: 1.5rem;
             }
 
-            #mobile-products > p {
+            .mobile-content-wrapper > p {
                 font-size: 0.85rem;
-                margin-bottom: 3rem;
-            }
-
-            .mobile-product-item {
-                margin-bottom: 3rem;
-            }
-
-            .mobile-product-item:last-child {
-                margin-bottom: 2rem;
             }
 
             .mobile-product-item img {
-                max-width: 220px;
-                margin-bottom: 1.5rem;
+                width: 220px;
             }
 
             .mobile-product-item h2 {
-                font-size: 1.4rem;
-                margin-bottom: 0.5rem;
+                font-size: 1.3rem;
             }
 
             .mobile-product-item h3 {
@@ -192,19 +172,21 @@
 
     <!-- Mobile Product View (shown only on mobile) -->
     <div id="mobile-products">
-        <h1>Next-Generation Plasma Propulsion Architecture</h1>
-        <p>We build advanced plasma-based propulsion systems designed to offer precise, high-thrust mobility in an ultra-compact form factor. Designed for plug-and-play integration, our modules simplify spacecraft engineering while enabling efficient orbit transfers, agile maneuvering, and extended mission lifetimes.</p>
+        <div class="mobile-content-wrapper">
+            <h1>Next-Generation Plasma Propulsion Architecture</h1>
+            <p>We build advanced plasma-based propulsion systems designed to offer precise, high-thrust mobility in an ultra-compact form factor. Designed for plug-and-play integration, our modules simplify spacecraft engineering while enabling efficient orbit transfers, agile maneuvering, and extended mission lifetimes.</p>
 
-        <div class="mobile-product-item">
-            <img src="assets/images/mayukha.png" alt="MAYUKHA AF-MPD Thruster">
-            <h2>MAYUKHA</h2>
-            <h3>AF-MPD Thruster</h3>
-        </div>
+            <div class="mobile-product-item">
+                <img src="assets/images/mayukha.png" alt="MAYUKHA AF-MPD Thruster">
+                <h2>MAYUKHA</h2>
+                <h3>AF-MPD Thruster</h3>
+            </div>
 
-        <div class="mobile-product-item">
-            <img src="assets/images/mihira.png" alt="MIHIRA RF-Gridded Ion Thruster">
-            <h2>MIHIRA</h2>
-            <h3>RF-Gridded Ion Thruster</h3>
+            <div class="mobile-product-item">
+                <img src="assets/images/mihira.png" alt="MIHIRA RF-Gridded Ion Thruster">
+                <h2>MIHIRA</h2>
+                <h3>RF-Gridded Ion Thruster</h3>
+            </div>
         </div>
     </div>
 
