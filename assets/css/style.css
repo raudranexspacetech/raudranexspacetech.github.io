@@ -28,12 +28,12 @@ img {
     /* New Black-Based Palette */
     --color-background: #050505;      /* Near-black for depth */
     --color-primary-container: #1B1A55; /* Retaining for cards, but we can change */
-    --color-text-primary: #FFFFFF;      /* Pure white for high-contrast text */
-    --color-text-secondary: #9290C3;  /* Lighter lavender-grey for subtitles */
-    --color-accent-blue: #00d9ff;      /* A vibrant cyan for highlights */
+    --color-text-primary: #ffffff;      /* Pure white for high-contrast text */
+    --color-text-secondary: #FFDBBB;  /* Lighter lavender-grey for subtitles */
+    --color-accent: #ffffff;      /* A vibrant cyan for highlights */
     --color-button-bg: #333333;       /* A solid dark grey for buttons */
     --color-button-hover-bg: #555555; /* A lighter grey for hover */
-    --color-grid: rgba(255, 255, 255, 0.07); /* Faint white/grey for background grid */
+    --color-grid: rgba(255, 255, 255, 0.284); /* Faint white/grey for background grid */
 }
 
 /* --- GENERAL STYLING --- */
@@ -90,7 +90,7 @@ body {
 }
 
 .main-nav a:hover {
-    color: var(--color-accent-blue); /* Highlight on hover */
+    color: var(--color-accent); /* Highlight on hover */
 }
 
 /* --- HERO SECTION STYLING --- */
@@ -267,7 +267,7 @@ main {
 
 .modal-body h2 {
     font-size: 2.5rem;
-    color: var(--color-accent-blue);
+    color: var(--color-accent);
     margin-bottom: 0.5rem;
 }
 
@@ -318,8 +318,8 @@ body.is-animating-out .page-transition {
 
 /* --- FOOTER STYLING --- */
 .main-footer {
-    background-color: #0a0a0a;
-    padding: 3rem 4rem 2rem;
+    background-color: rgba( 10, 10, 10, 0.3);
+    padding: 3rem 0rem 2rem;
     border-top: 1px solid var(--color-grid);
     margin-top: auto;
 }
@@ -330,6 +330,8 @@ body.is-animating-out .page-transition {
     align-items: flex-start;
     gap: 4rem;
     margin-bottom: 2rem;
+    padding-left: 4rem;
+    padding-right: 4rem;
 }
 
 .footer-left .footer-logo img {
@@ -345,7 +347,7 @@ body.is-animating-out .page-transition {
 
 .footer-section h3 {
     font-size: 0.9rem;
-    color: var(--color-accent-blue);
+    color: var(--color-accent);
     margin-bottom: 1rem;
     font-weight: 600;
     letter-spacing: 1px;
@@ -360,7 +362,7 @@ body.is-animating-out .page-transition {
 }
 
 .footer-section a:hover {
-    color: var(--color-accent-blue);
+    color: var(--color-accent);
     transition: color 0.3s ease;
 }
 
@@ -384,8 +386,8 @@ body.is-animating-out .page-transition {
 }
 
 .social-links a:hover {
-    border-color: var(--color-accent-blue);
-    color: var(--color-accent-blue);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
     transform: translateY(-3px);
 }
 
