@@ -92,6 +92,10 @@ body {
 .main-nav a:hover {
     color: var(--color-accent); /* Highlight on hover */
 }
+.main-nav a.active {
+  border-bottom: 3px solid #FFDBBB;  /* Adjust color/thickness */
+  padding-bottom: 5px;  /* Space for border */
+}
 
 /* --- HERO SECTION STYLING --- */
 #hero {

@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <h2 style="font-size: 2.5rem; margin-bottom: 0.5rem;">${data.name}</h2>
             <h3 style="font-size: 1.3rem; color: var(--color-text-secondary); margin-bottom: 1.5rem;">${data.subtitle}</h3>
             <p style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 2rem; color: var(--color-text-secondary);">${data.description}</p>
-            <h4 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--color-accent-blue);">Specifications</h4>
+            <h4 style="font-size: 1.2rem; margin-bottom: 1rem; color: var(--color-accent);">Specifications</h4>
             ${data.specs}
         `;
         modal.classList.remove('modal-hidden');

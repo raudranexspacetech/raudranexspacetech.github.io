@@ -25,3 +25,13 @@ document.addEventListener("DOMContentLoaded", function() {
         ease: "power3.out"
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const links = document.querySelectorAll('.main-nav ul li a');
+  const currentPath = window.location.pathname;
+  links.forEach(link => {
+    if (link['href'].includes(currentPath)) {
+      link.classList.add('active');
+    }
+  });
+});
