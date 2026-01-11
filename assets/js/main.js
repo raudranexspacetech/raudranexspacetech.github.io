@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // --- HERO TEXT ANIMATION (runs on page load) ---
     gsap.from("#hero h1, #hero p, #hero .cta-button", {
-        opacity: 0,
+        opacity: 0.5,
         y: 50,
         duration: 1,
         stagger: 0.3,
@@ -28,9 +28,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const links = document.querySelectorAll('.main-nav ul li a');
-  const currentPath = window.location.pathname;
+  let currentPath = window.location.pathname;
+  if(currentPath=='/') currentPath="/index.html";
   links.forEach(link => {
-    if (link['href'].includes(currentPath)) {
+    if (link['href'].includes(currentPath)) {      
       link.classList.add('active');
     }
   });

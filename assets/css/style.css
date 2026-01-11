@@ -105,7 +105,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    padding: 0 2rem;
+    padding: 18rem 2rem;
 }
 
 #hero h1 {
@@ -113,12 +113,14 @@ body {
     font-weight: 600;
     margin-bottom: 1rem;
     letter-spacing: 2px;
+    padding-top: 1rem;
 }
 
 #hero p {
     font-size: 1.25rem;
     color: var(--color-text-secondary);
-    max-width: 600px;
+    max-width: 760px;
+    padding-top: 2rem;
 }
 
 main {
@@ -297,6 +299,9 @@ main {
     color: var(--color-text-secondary);
 }
 
+.team-member:hover{
+    display: none;
+}
 /* --- PAGE TRANSITION STYLING --- */
 .page-transition {
     position: fixed;

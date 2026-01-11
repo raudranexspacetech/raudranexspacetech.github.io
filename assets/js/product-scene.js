@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         subtitleDiv.style.fontSize = '12px';
         subtitleDiv.style.fontWeight = '400';
         subtitleDiv.style.letterSpacing = '1px';
-        subtitleDiv.style.color = '#9290C3';
+        subtitleDiv.style.color = '#ffdbbb';
         subtitleDiv.textContent = data.subtitle;
 
         label.appendChild(nameDiv);
