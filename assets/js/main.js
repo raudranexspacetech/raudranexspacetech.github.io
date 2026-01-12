@@ -36,3 +36,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+
+
+// Hamburger Menu Toggle
+const hamburger = document.querySelector('.hamburger');
+const nav = document.querySelector('.main-nav');
+const menuOverlay = document.createElement('div');
+menuOverlay.className = 'menu-overlay';
+
+document.body.appendChild(menuOverlay);
+
+hamburger.addEventListener('click', () => {
+    const isActive = nav.classList.contains('active');
+    
+    hamburger.setAttribute('aria-expanded', !isActive);
+    hamburger.classList.toggle('active');
+    nav.classList.toggle('active');
+    menuOverlay.classList.toggle('active');
+    document.body.classList.toggle('menu-open');
+});
+
+// Close menu on overlay click or escape
+menuOverlay.addEventListener('click', () => {
+    hamburger.click();
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && nav.classList.contains('active')) {
+        hamburger.click();
+    }
+});
+
+// Close menu on nav link click
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+        hamburger.click();
+    });
+});

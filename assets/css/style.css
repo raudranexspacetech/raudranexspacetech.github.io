@@ -76,13 +76,20 @@ body {
 .logo img {
     height: 60px; /* Adjust size as needed */
 }
+.main-nav{
+    z-index: 1000 !important;
+}
 
 .main-nav ul {
     display: flex;
     gap: 2.5rem; /* Space between nav items */
 }
+.menu-overlay :active{
+    visibility: hidden;
+}
 
 .main-nav a {
+    z-index: 1001 !important;
     font-size: 1rem;
     font-weight: 500;
     letter-spacing: 0.5px;
@@ -97,6 +104,114 @@ body {
   padding-bottom: 5px;  /* Space for border */
 }
 
+
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 11;
+}
+
+.hamburger span {
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-text-primary);
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Mobile Nav Overlay */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+    
+    .main-nav {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: rgba(5, 5, 5, 0.98);
+        backdrop-filter: blur(10px);
+        transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        padding-top: 100px;
+        box-shadow: -5px 0 20px rgba(0,0,0,0.5);
+    }
+    
+    .main-nav.active {
+        right: 0;
+    }
+    
+    .main-nav ul {
+        flex-direction: column !important;
+        gap: 0 !important;
+        align-items: center;
+        padding: 2rem 0;
+    }
+    
+    .nav-link {
+        display: block;
+        padding: 1.5rem 2rem;
+        font-size: 1.2rem;
+        width: 100%;
+        text-align: center;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .nav-link:hover,
+    .nav-link.active {
+        background-color: rgba(255,219,187,0.1);
+        border-bottom-color: var(--color-accent);
+    }
+    
+    /* Overlay backdrop */
+    body.menu-open {
+        overflow: hidden;
+    }
+    
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 9;
+    }
+    
+    .menu-overlay.active {
+        opacity: 1;
+    }
+}
+
+
+
+
+
 /* --- HERO SECTION STYLING --- */
 #hero {
     min-height: 100vh; /* Takes full height of the screen */
@@ -106,18 +221,25 @@ body {
     align-items: center;
     text-align: center;
     padding: 18rem 2rem;
+    
 }
 
 #hero h1 {
-    font-size: 5rem; /* Large, impactful text */
+    font-family: 'Orbitron', sans-serif;
+    font-size:520%;
     font-weight: 600;
     margin-bottom: 1rem;
     letter-spacing: 2px;
     padding-top: 1rem;
 }
+#hero h2{
+    font-family: 'Tinos', serif;
+    font-size:270%;
+}
 
 #hero p {
-    font-size: 1.25rem;
+    font-family: 'Tinos', serif;
+    font-size: x-large;
     color: var(--color-text-secondary);
     max-width: 760px;
     padding-top: 2rem;
@@ -695,5 +817,22 @@ body.is-animating-out .page-transition {
 
     .footer-bottom {
         font-size: 0.8rem;
+    }
+}
+/* --- MOBILE Portrait (420px) --- */
+@media (max-width:420px){
+    #hero{
+        align-items: center;
+        padding:10%
+    }
+    #hero h2{
+        align-content: center;
+        font-size: 85%;
+    }
+    #hero h1{
+        font-size: 190%;
+    }
+    #hero p{
+        font-size: 70%;
     }
 }
