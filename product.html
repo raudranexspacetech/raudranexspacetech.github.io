@@ -20,18 +20,7 @@
 
     <style>
         /* Mobile Product Section - Clean Simple Layout */
-        #mobile-products {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: #000000;
-            overflow-y: auto;
-            overflow-x: hidden;
-            z-index: 5;
-        }
+        
 
         .mobile-content-wrapper {
             padding: 2rem 1.5rem;
@@ -144,28 +133,30 @@
 <body class="product-page-body">
 
     <header class="main-header">
-        <div style="display: flex; gap: 3rem; align-items: start;">
-            <div class="logo">
-                <a href="index.html">
-                    <img src="assets/images/logo.png" alt="Raudranex Aerospace Logo">
-                </a>
+            <div class="header">
+                <div class="hamburger-container">
+                    <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="assets/images/logo.png" alt="Raudranex Aerospace Logo">
+                    </a>
+                </div>            
             </div>
-            <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            </div>
-        <nav class="main-nav">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="product.html">Product</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="career.html">Career</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="product.html">Product</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="career.html">Career</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </header>
 
     <!-- Product Introduction Section -->
     <section id="product-intro" style="position: absolute; top: 140px; left: 50%; transform: translateX(-50%); z-index: 10; max-width: 1400px; width: 90%; text-align: center; padding: 0 2rem;">

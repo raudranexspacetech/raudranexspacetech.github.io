@@ -73,6 +73,12 @@ body {
     z-index: 10; /* Ensure header is above the 3D scene */
 }
 
+.header{
+    display: flex;
+    gap: 3rem;
+    align-items: start;
+}
+
 .logo img {
     height: 60px; /* Adjust size as needed */
 }
@@ -377,7 +383,19 @@ main {
     transform: scale(0.9);
     transition: transform 0.4s ease;
 }
-
+#mobile-products {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000000;
+            overflow-y: auto;
+            overflow-x: hidden;
+            z-index: 5;
+        }
+        
 #product-modal:not(.modal-hidden) .modal-content {
     transform: scale(1);
 }
@@ -834,5 +852,32 @@ body.is-animating-out .page-transition {
     }
     #hero p{
         font-size: 70%;
+    }
+    .main-header{
+        justify-content: space-between;
+    }
+
+    .header{
+        
+        background-color: rgba( 10, 10, 10, 0.75);
+        padding: 5%;
+        gap:0rem;
+        width: 100%;
+        position: fixed;
+    }
+    .logo img{
+        z-index: 1;
+        align-items: center;
+    }
+    .hamburger-container{
+        z-index: 1;
+        padding-top: 1%;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #mobile-products{
+        display: block;
+        position: relative;
     }
 }
